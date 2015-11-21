@@ -28,6 +28,11 @@ public class UserDecisionPanel
 	public UserDecisionPanel() 
 	{
 		super();
+		createComponents();
+	}
+	
+	public void createComponents()
+	{
 		setLayout( new BoxLayout( this, BoxLayout.Y_AXIS ) );
 		suggestionAccusationPanel = new SuggestionAccusationPanel();
 		
