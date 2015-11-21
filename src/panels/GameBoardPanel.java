@@ -5,7 +5,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics; 
 
-import javax.swing.JComponent;
 import javax.swing.JFrame; 
 import javax.swing.JPanel;
 
@@ -90,7 +89,7 @@ public class GameBoardPanel extends JPanel
   final static int KITCHEN_SECRETPATH_X = KITCHEN_X;
   final static int KITCHEN_SECRETPATH_Y = KITCHEN_Y;
   
-	Room hall;
+  Room hall;
   Room study; 
   Room lounge;  
   Room lib; 
@@ -103,15 +102,15 @@ public class GameBoardPanel extends JPanel
   Hallway study_Hallway;
   Hallway hall_lounge;
   Hallway study_lib;
-	Hallway hall_billiard;
-	Hallway lounge_dinning;
-	Hallway lib_billiard;
-	Hallway billiard_dinning;
-	Hallway lib_conservatory;
-	Hallway billiard_ball;
-	Hallway dinning_kitchen;
-	Hallway conservatory_ball;
- 	Hallway ball_kitchen;
+  Hallway hall_billiard;
+  Hallway lounge_dinning;
+  Hallway lib_billiard;
+  Hallway billiard_dinning;
+  Hallway lib_conservatory;
+  Hallway billiard_ball;
+  Hallway dinning_kitchen;
+  Hallway conservatory_ball;
+  Hallway ball_kitchen;
    
   public GameBoardPanel() 
   { 

@@ -10,22 +10,31 @@ import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 public class DetectiveNotePanel 
 	extends JPanel
 {
-	private static final String[] SUSPECTS = { "Miss Scarlet", "Col. Mustard", "Mrs. White",
-																							"Mr. Green", "Prof. Plum", "Mrs. Peacock" };
+	private static final String[] SUSPECTS = { 
+		"Miss Scarlet", "Col. Mustard", "Mrs. White",
+		"Mr. Green", "Prof. Plum", "Mrs. Peacock" };
 	
-	private static final String[] ROOMS = { "Hall", "Lounge", "Dinning Room", "Ball Room",
-																					"Conservatory", "Billiard Room", "Library", "Study" };
+	private static final String[] ROOMS = { 
+		"Hall", "Lounge", "Dinning Room", "Ball Room",
+		"Conservatory", "Billiard Room", "Library", "Study" };
 	
-	private static final String[] WEAPONS = { "Knife", "Candle Stick", "Rope",
-																						"Lead Pipe", "Wrench", "Revolver" };
+	private static final String[] WEAPONS = { 
+		"Knife", "Candle Stick", "Rope",
+		"Lead Pipe", "Wrench", "Revolver" };
 	
 	public DetectiveNotePanel()
 	{
 		super();
+		createComponents();
+	}
+	
+	public void createComponents()
+	{
 		setLayout( new BorderLayout() );
 		
 		JPanel labelPane = new JPanel( new FlowLayout( FlowLayout.CENTER ) );
@@ -78,7 +87,6 @@ public class DetectiveNotePanel
 	
 	class CheckBoxRow extends JPanel
 	{
-		
 		public CheckBoxRow( String labelName )
 		{
 			super();
@@ -96,14 +104,13 @@ public class DetectiveNotePanel
 			add( box3 );
 			add( box4 );
 			add( box5 );
-		}
-		
+		}	
 	}
 	
 	public static void main( String a[] ) 
 	{
 		JFrame frame = new JFrame();
-		frame.add( new DetectiveNotePanel( ) );
+		frame.add( new DetectiveNotePanel() );
 		frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
 		frame.pack();
 		frame.setVisible( true );

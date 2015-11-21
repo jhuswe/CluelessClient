@@ -1,10 +1,13 @@
 package client;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 
 import panels.ConnectToServerPanel;
@@ -17,6 +20,7 @@ public class MainApplication
 	extends JFrame
 {
 	protected JPanel ctsPane;
+	protected JPanel udPane;
 	protected JPanel dnp;
 	protected JPanel gbp;
 	
@@ -28,11 +32,28 @@ public class MainApplication
 	private void createAndShowGUI()
 	{
 		JPanel mainPane = new JPanel( new BorderLayout() );
-//		ctsPane = new ConnectToServerPanel();
-		ctsPane = new UserDecisionPanel();
-//		ctsPane.createComponents();
-//		ctsPane.layoutComponents();
+		ctsPane = new ConnectToServerPanel();		
 		ctsPane.setBorder( BorderFactory.createLineBorder( Color.BLACK ) );
+		( (ConnectToServerPanel) ctsPane ).okay.addActionListener( new ActionListener() 
+		{
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String ipAddress = ((ConnectToServerPanel) ctsPane).input.getText();
+				// TODO use ipAddress to connect to Server
+			}
+		} );
+		
+		udPane = new UserDecisionPanel();
+		udPane.setBorder( BorderFactory.createLineBorder( Color.BLACK ) );
+		( (UserDecisionPanel) udPane ).suggestionAccusationPanel.okay.addActionListener(
+				new ActionListener()
+				{
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						// TODO send suggestion/accusation decision to Server
+						
+					}	
+				} );
 		
 		dnp = new DetectiveNotePanel();
 		dnp.setBorder( BorderFactory.createLineBorder( Color.BLACK ) );
@@ -41,10 +62,11 @@ public class MainApplication
 		gbp.setBorder( BorderFactory.createLineBorder( Color.BLACK ) );
 		
 		mainPane.add( gbp, BorderLayout.PAGE_START );
-		mainPane.add( ctsPane, BorderLayout.LINE_START );
+		mainPane.add( udPane, BorderLayout.LINE_START );
 		mainPane.add( dnp, BorderLayout.LINE_END );
 		
-		add(mainPane);
+		JScrollPane scroll = new JScrollPane( mainPane );
+		add( scroll );
 		
 		setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
 		pack();

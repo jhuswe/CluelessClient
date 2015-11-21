@@ -17,17 +17,19 @@ public class ConnectToServerPanel
 {
 	private final static int IPADDX_CHAR_NUM = 15;
 	
-	protected String ipaddrx;
-	protected JTextField input;
-	protected JButton okay;
-	protected JLabel label1;
-	protected JLabel label2;
-	protected boolean badAddress;
+	public String ipaddrx;
+	public JTextField input;
+	public JButton okay;
+	public JLabel label1;
+	public JLabel label2;
+	public boolean badAddress;
 	
 	public ConnectToServerPanel()
 	{
 		super ( new GridLayout() );
 		badAddress = false;
+		createComponents();
+		layoutComponents();
 	}
 
 	public void createComponents()
@@ -41,21 +43,6 @@ public class ConnectToServerPanel
 		input.setColumns( IPADDX_CHAR_NUM );
 		okay = new JButton( "Okay" );
 		okay.setSize( 6, 1 );
-
-		okay.addActionListener( new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				ipaddrx = input.getText();
-				System.out.println("[" + this.getClass() + "] " + "User input is: " + ipaddrx );
-				if( ipaddrx == null || ipaddrx.isEmpty() )
-				{
-					badAddress = true;
-					label2.setVisible( true );
-				}
-				else
-					label2.setVisible( false );
-			}			
-		});
 	}
 	
 	public void layoutComponents() 
