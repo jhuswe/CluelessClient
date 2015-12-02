@@ -24,6 +24,7 @@ public class UserDecisionPanel
 	public JLabel udpLabel = new JLabel( "User Decision Options" );
 	
 	public SuggestionAccusationPanel suggestionAccusationPanel;
+	public MoveMakingPanel moveMakingPanel;
 	
 	public UserDecisionPanel() 
 	{
