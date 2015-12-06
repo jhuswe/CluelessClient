@@ -21,7 +21,7 @@ import javax.swing.JPanel;
 public class UserDecisionPanel
 	extends JPanel 
 {	
-	public JLabel udpLabel = new JLabel( "User Decision Options" );
+	public JLabel udpLabel = new JLabel( "Have a Clue ?!" );
 	
 	public SuggestionAccusationPanel suggestionAccusationPanel;
 	public MoveMakingPanel moveMakingPanel;
@@ -36,6 +36,7 @@ public class UserDecisionPanel
 	{
 		setLayout( new BoxLayout( this, BoxLayout.Y_AXIS ) );
 		suggestionAccusationPanel = new SuggestionAccusationPanel();
+		moveMakingPanel = new MoveMakingPanel();
 		
 		JPanel labelPane = new JPanel( new FlowLayout( FlowLayout.CENTER ) );
 		udpLabel.setFont(new Font("Arial", Font.PLAIN, 20));

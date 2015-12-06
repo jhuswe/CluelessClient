@@ -61,6 +61,13 @@ public class MainApplication
 		gbp = new GameBoardPanel();
 		gbp.setBorder( BorderFactory.createLineBorder( Color.BLACK ) );
 		
+//		JPanel bottomPane = new JPanel( new FlowLayout( FlowLayout.LEFT ) );
+//		bottomPane.add( udPane );
+//		bottomPane.add( dnp );
+//		
+//		mainPane.add( gbp, BorderLayout.PAGE_START );
+//		mainPane.add( bottomPane, BorderLayout.PAGE_END );
+		
 		mainPane.add( gbp, BorderLayout.PAGE_START );
 		mainPane.add( udPane, BorderLayout.LINE_START );
 		mainPane.add( dnp, BorderLayout.LINE_END );
