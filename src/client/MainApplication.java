@@ -1,8 +1,12 @@
 package client;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Socket;
 
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
@@ -19,30 +23,88 @@ import panels.UserDecisionPanel;
 public class MainApplication 
 	extends JFrame
 {
+	/*
+	 *  Set time out to 5s
+	 */
+	protected final static int TIME_OUT = 5000;
+	
+	protected JPanel mainPane;
+	
+	/*
+	 * Connect-to-Server panel
+	 */
 	protected JPanel ctsPane;
+	
+	/*
+	 * User-decision panel
+	 */
 	protected JPanel udPane;
+	
+	/*
+	 * Detective note panel
+	 */
 	protected JPanel dnp;
+	
+	/*
+	 * Gameboard panel
+	 */
 	protected JPanel gbp;
+	
+	protected Socket socket;
+	
+	protected boolean connected;
+	
 	
 	public MainApplication()
 	{
 		super( "Main Application" );
+		mainPane = new JPanel( new BorderLayout() );
+		connected = false;
 	}
 	
-	private void createAndShowGUI()
+	/**
+	 * Open up Connect-to-Server panel to allow user to connect
+	 * to server by inputing an IP address. If connection is established,
+	 * Main Panel would be opened up that allows user to play game on.
+	 */
+	protected void makeConnection()
 	{
-		JPanel mainPane = new JPanel( new BorderLayout() );
 		ctsPane = new ConnectToServerPanel();		
-		ctsPane.setBorder( BorderFactory.createLineBorder( Color.BLACK ) );
 		( (ConnectToServerPanel) ctsPane ).okay.addActionListener( new ActionListener() 
 		{
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent event) {
 				String ipAddress = ((ConnectToServerPanel) ctsPane).input.getText();
-				// TODO use ipAddress to connect to Server
+				try
+				{
+					socket = new Socket();
+					socket.connect( new InetSocketAddress( ipAddress, 8889 ), TIME_OUT );
+					mainPane.remove( ctsPane );
+					openGameGUI();
+				} 
+				catch( IOException e ) 
+				{ 
+					System.out.println( "ERROR:: " + e );
+					( (ConnectToServerPanel) ctsPane ).label2.setVisible( true );
+				}
 			}
 		} );
 		
+		mainPane.add( ctsPane );
+		add( mainPane );
+		setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+		pack();
+		setLocationRelativeTo( null );
+		setVisible( true );
+	}
+	
+	/**
+	 * Open up Main Panel, the container for 
+	 * Gameboard panel, User decision panel, Detective note panel,
+	 * and Status panel.
+	 */
+	protected void openGameGUI()
+	{	
 		udPane = new UserDecisionPanel();
 		udPane.setBorder( BorderFactory.createLineBorder( Color.BLACK ) );
 		( (UserDecisionPanel) udPane ).suggestionAccusationPanel.okay.addActionListener(
@@ -61,12 +123,12 @@ public class MainApplication
 		gbp = new GameBoardPanel();
 		gbp.setBorder( BorderFactory.createLineBorder( Color.BLACK ) );
 		
-//		JPanel bottomPane = new JPanel( new FlowLayout( FlowLayout.LEFT ) );
-//		bottomPane.add( udPane );
-//		bottomPane.add( dnp );
-//		
-//		mainPane.add( gbp, BorderLayout.PAGE_START );
-//		mainPane.add( bottomPane, BorderLayout.PAGE_END );
+		JPanel bottomPane = new JPanel( new FlowLayout( FlowLayout.LEFT ) );
+		bottomPane.add( udPane );
+		bottomPane.add( dnp );
+		
+		mainPane.add( gbp, BorderLayout.PAGE_START );
+		mainPane.add( bottomPane, BorderLayout.PAGE_END );
 		
 		mainPane.add( gbp, BorderLayout.PAGE_START );
 		mainPane.add( udPane, BorderLayout.LINE_START );
@@ -88,7 +150,7 @@ public class MainApplication
 			@Override
 			public void run() {
 				MainApplication app = new MainApplication();
-				app.createAndShowGUI();
+				app.makeConnection();
 			}
 		});
 	}
