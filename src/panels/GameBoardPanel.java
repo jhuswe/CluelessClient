@@ -1,14 +1,20 @@
 package panels;
  
  
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics; 
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JFrame; 
 import javax.swing.JPanel;
 
+import objects.Card;
 import objects.Hallway;
+import objects.Location;
+import objects.Character;
 import objects.Room;
  
  
@@ -88,30 +94,10 @@ public class GameBoardPanel extends JPanel
   final static int CONSERVATORY_SECRETPATH_Y = CONSERVATORY_Y;
   final static int KITCHEN_SECRETPATH_X = KITCHEN_X;
   final static int KITCHEN_SECRETPATH_Y = KITCHEN_Y;
+
+  List<Location> loc;
   
-  Room hall;
-  Room study; 
-  Room lounge;  
-  Room lib; 
-  Room billiard; 
-  Room dining; 
-  Room conservatory; 
-  Room ball; 
-  Room kitchen; 
-   
-  Hallway study_Hallway;
-  Hallway hall_lounge;
-  Hallway study_lib;
-  Hallway hall_billiard;
-  Hallway lounge_dining;
-  Hallway lib_billiard;
-  Hallway billiard_dining;
-  Hallway lib_conservatory;
-  Hallway billiard_ball;
-  Hallway dining_kitchen;
-  Hallway conservatory_ball;
-  Hallway ball_kitchen;
-   
+  
   public GameBoardPanel() 
   { 
   	super();
@@ -123,19 +109,60 @@ public class GameBoardPanel extends JPanel
   { 
     super.paintComponent( g ); 
     drawStaticGraphics( g );
+    drawOccupants( g );
   } 
-   
+
   public void drawStaticGraphics( Graphics g )
   {
 	  drawRooms( g );
 	  drawHallways( g );
   }
   
+  /**
+   * Receive message from Server to update the current state of game
+   * re-rendering to update client's game graphics
+   */
+  public void updateGameBoard( List<Location> loc )
+  {
+  	  this.loc = loc;
+  	  this.repaint();
+  	  this.loc = null;
+  }
+  
+  public void drawOccupants(Graphics g) 
+  {
+	  if( loc != null )
+	  {
+		  for( Location l : loc )
+		  {
+			  int[] xy;
+			  
+			  if( l.getOccupants() != null )
+			  {
+			       if( l instanceof Hallway )
+			       {
+			    	   xy = getDrawPoint( ((Hallway) l).id );
+			    	   Color color = g.getColor();
+			    	   g.setColor( l.getOccupants().get(0).color);
+			    	   g.fillOval(xy[0], xy[1], HALLWAY_WIDTH, HALLWAY_WIDTH);
+			    	   g.setColor( color );
+			       }
+			       else if( l instanceof Room )
+			       {
+			    	   xy = getDrawPoint( ((Room) l).getId() );
+			 		  List<Character> charList = l.getOccupants();
+			    	   // TODO: draw Ovals for number of occupants
+			       }
+			  }
+		  }
+	  }
+  }
+  
   public void drawRooms( Graphics g )
   {
 	  Font font = new Font( "Arial", Font.PLAIN, FONT_SIZE );
 	  g.setFont( font );
-	  
+  
 		g.drawRect( STUDY_X, STUDY_Y, ROOM_WIDTH, ROOM_WIDTH );
 		g.drawString("Study", STUDY_X + FONT_SIZE, STUDY_Y + FONT_SIZE);
 		drawSecretPath( g, STUDY_SECRETPATH_X, STUDY_SECRETPATH_Y );
@@ -192,10 +219,57 @@ public class GameBoardPanel extends JPanel
 	  g.drawRect( x, y, SECRETPATH_LENGTH, SECRETPATH_LENGTH );
   }
   
-  public void updateState( String string )
+  public int[] getDrawPoint( int id )
   {
-  	// receive message from Server to update the current state of game
-  	// re-rendering to update client's game graphics
+	  int[] xy = { -1, -1 };
+	  
+	  // HALLWAY Coordinates
+	  if( id == Card.BALL_KITCHEN.value() )
+		  xy = new int[] { BALL_KITCHEN_HALLWAY_X + HALLWAY_LENGTH / 2, BALL_KITCHEN_HALLWAY_Y };
+	  else if( id == Card.BILLIARD_BALL.value() )
+		  xy = new int[] { BILLIARD_BALL_HALLWAY_X, BILLIARD_BALL_HALLWAY_Y + HALLWAY_LENGTH / 2 };
+	  else if( id == Card.BILLIARD_DINING.value() )
+		  xy = new int[] { BILLIARD_DINING_HALLWAY_X + HALLWAY_LENGTH / 2, BILLIARD_DINING_HALLWAY_Y };
+	  else if( id == Card.CONSERVATORY_BALL.value() )
+		  xy = new int[] { CONSERVATORY_BALL_HALLWAY_X + HALLWAY_LENGTH / 2, CONSERVATORY_BALL_HALLWAY_Y };
+	  else if( id == Card.DINING_KITCHEN.value() )
+		  xy = new int[] { DINING_KITCHEN_HALLWAY_X, DINING_KITCHEN_HALLWAY_Y + HALLWAY_LENGTH / 2 };
+	  else if( id == Card.HALL_BILLIARD.value() )
+		  xy = new int[] { HALL_BILLIARD_HALLWAY_X, HALL_BILLIARD_HALLWAY_Y + HALLWAY_LENGTH / 2 };
+	  else if( id == Card.HALL_LOUNGE.value() )
+		  xy = new int[]{ HALL_LOUNGE_HALLWAY_X + HALLWAY_LENGTH / 2, HALL_LOUNGE_HALLWAY_Y };
+	  else if( id == Card.LIBRARY_BILLIARD.value() )
+		  xy = new int[]{ LIBRARY_BILLIARD_HALLWAY_X + HALLWAY_LENGTH / 2, LIBRARY_BILLIARD_HALLWAY_Y };
+	  else if( id == Card.LIBRARY_CONSERVATORY.value() )
+		  xy = new int[]{ LIBRARY_CONSERVATORY_HALLWAY_X, LIBRARY_CONSERVATORY_HALLWAY_Y + HALLWAY_LENGTH / 2 };
+	  else if( id == Card.LOUNGE_DINING.value() )
+		  xy = new int[] { LOUNGE_DINING_HALLWAY_X, LOUNGE_DINING_HALLWAY_Y + HALLWAY_LENGTH / 2 };
+	  else if( id == Card.STUDY_HALL.value() )
+		  xy = new int[] { STUDY_HALL_HALLWAY_X + HALLWAY_LENGTH / 2, STUDY_HALL_HALLWAY_Y };
+	  else if( id == Card.STUDY_LIBRARY.value() )
+		  xy = new int[] { STUDY_LIBRARY_HALLWAY_X, STUDY_LIBRARY_HALLWAY_Y + HALLWAY_LENGTH / 2 };
+	  
+	  // ROOM Coordinates
+	  if( id == Card.BALL.value() )
+		  xy = new int[] { BALL_X, BALL_Y };
+	  else if( id == Card.BILLIARD.value() )
+		  xy = new int[] { BILLIARD_X, BILLIARD_Y };
+	  else if( id == Card.DINING.value() )
+		  xy = new int[] { DINING_X, DINING_Y };
+	  else if( id == Card.HALL.value() )
+		  xy = new int[] { HALL_X, HALL_Y };
+	  else if( id == Card.KITCHEN.value() )
+		  xy = new int[] { KITCHEN_X, KITCHEN_Y };
+	  else if( id == Card.LIBRARY.value() )
+		  xy = new int[] { LIBRARY_X, LIBRARY_Y };
+	  else if( id == Card.LOUNGE.value() )
+		  xy = new int[] { LOUNGE_X, LOUNGE_Y };
+	  else if( id == Card.STUDY.value() )
+		  xy = new int[] { STUDY_X, STUDY_Y };
+	  else if( id == Card.CONSERVATORY.value() )
+		  xy = new int[] { CONSERVATORY_X, CONSERVATORY_Y };
+	  
+	  return xy;
   }
   
   public static void main (String[] args)  
@@ -205,8 +279,18 @@ public class GameBoardPanel extends JPanel
     frame.setSize( 750, 700 );
     frame.setVisible( true ); 
      
-    GameBoardPanel view = new GameBoardPanel(); 
-    frame.add( view ); 
+    GameBoardPanel gbp = new GameBoardPanel(); 
+    
+    // TEST
+    gbp.loc = new ArrayList<Location>();
+    Hallway hw1 = new Hallway( Card.STUDY_HALL.value() ) ;
+    hw1.addOccupant( new Character( Card.COL_MUSTARD.value() ) );
+    Hallway hw2 = new Hallway( Card.HALL_LOUNGE.value() ) ;
+    hw2.addOccupant( new Character( Card.MISS_SCARLET.value() ) );
+    gbp.loc.add( hw1 );
+    gbp.loc.add( hw2 );
+    
+    frame.add( gbp ); 
   } 
 } 
  

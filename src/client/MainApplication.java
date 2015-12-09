@@ -43,12 +43,12 @@ public class MainApplication
 	/*
 	 * Detective note panel
 	 */
-	protected JPanel dnp;
+	protected JPanel dnPane;
 	
 	/*
 	 * Gameboard panel
 	 */
-	protected JPanel gbp;
+	protected JPanel gbPane;
 	
 	protected Socket socket;
 	
@@ -117,22 +117,22 @@ public class MainApplication
 					}	
 				} );
 		
-		dnp = new DetectiveNotePanel();
-		dnp.setBorder( BorderFactory.createLineBorder( Color.BLACK ) );
+		dnPane = new DetectiveNotePanel();
+		dnPane.setBorder( BorderFactory.createLineBorder( Color.BLACK ) );
 		
-		gbp = new GameBoardPanel();
-		gbp.setBorder( BorderFactory.createLineBorder( Color.BLACK ) );
+		gbPane = new GameBoardPanel();
+		gbPane.setBorder( BorderFactory.createLineBorder( Color.BLACK ) );
 		
 		JPanel bottomPane = new JPanel( new FlowLayout( FlowLayout.LEFT ) );
 		bottomPane.add( udPane );
-		bottomPane.add( dnp );
+		bottomPane.add( dnPane );
 		
-		mainPane.add( gbp, BorderLayout.PAGE_START );
+		mainPane.add( gbPane, BorderLayout.PAGE_START );
 		mainPane.add( bottomPane, BorderLayout.PAGE_END );
 		
-		mainPane.add( gbp, BorderLayout.PAGE_START );
+		mainPane.add( gbPane, BorderLayout.PAGE_START );
 		mainPane.add( udPane, BorderLayout.LINE_START );
-		mainPane.add( dnp, BorderLayout.LINE_END );
+		mainPane.add( dnPane, BorderLayout.LINE_END );
 		
 		JScrollPane scroll = new JScrollPane( mainPane );
 		add( scroll );
