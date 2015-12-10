@@ -220,52 +220,75 @@ public class GameBoardPanel extends JPanel
   {
 	  int[] xy = { -1, -1 };
 	  
-	  // HALLWAY Coordinates
-	  if( id == Card.BALL_KITCHEN.value() )
-		  xy = new int[] { BALL_KITCHEN_HALLWAY_X + HALLWAY_LENGTH / 2, BALL_KITCHEN_HALLWAY_Y };
-	  else if( id == Card.BILLIARD_BALL.value() )
+	  switch( Card.getCard( id ) )
+	  {
+		 //HALLWAY Coordinates
+	  	case BALL_KITCHEN:
+	  	  xy = new int[] { BALL_KITCHEN_HALLWAY_X + HALLWAY_LENGTH / 2, BALL_KITCHEN_HALLWAY_Y };
+	  	  break;
+	  	case BILLIARD_BALL:
 		  xy = new int[] { BILLIARD_BALL_HALLWAY_X, BILLIARD_BALL_HALLWAY_Y + HALLWAY_LENGTH / 2 };
-	  else if( id == Card.BILLIARD_DINING.value() )
+		  break;
+	  	case BILLIARD_DINING:
 		  xy = new int[] { BILLIARD_DINING_HALLWAY_X + HALLWAY_LENGTH / 2, BILLIARD_DINING_HALLWAY_Y };
-	  else if( id == Card.CONSERVATORY_BALL.value() )
+		  break;
+	  	case CONSERVATORY_BALL:
 		  xy = new int[] { CONSERVATORY_BALL_HALLWAY_X + HALLWAY_LENGTH / 2, CONSERVATORY_BALL_HALLWAY_Y };
-	  else if( id == Card.DINING_KITCHEN.value() )
+		  break;
+	  	case DINING_KITCHEN:
 		  xy = new int[] { DINING_KITCHEN_HALLWAY_X, DINING_KITCHEN_HALLWAY_Y + HALLWAY_LENGTH / 2 };
-	  else if( id == Card.HALL_BILLIARD.value() )
+		  break;
+	  	case HALL_BILLIARD:
 		  xy = new int[] { HALL_BILLIARD_HALLWAY_X, HALL_BILLIARD_HALLWAY_Y + HALLWAY_LENGTH / 2 };
-	  else if( id == Card.HALL_LOUNGE.value() )
+		  break;
+	  	case HALL_LOUNGE:
 		  xy = new int[]{ HALL_LOUNGE_HALLWAY_X + HALLWAY_LENGTH / 2, HALL_LOUNGE_HALLWAY_Y };
-	  else if( id == Card.LIBRARY_BILLIARD.value() )
+		  break;
+	  	case LIBRARY_BILLIARD:
 		  xy = new int[]{ LIBRARY_BILLIARD_HALLWAY_X + HALLWAY_LENGTH / 2, LIBRARY_BILLIARD_HALLWAY_Y };
-	  else if( id == Card.LIBRARY_CONSERVATORY.value() )
+		  break;
+	  	case LIBRARY_CONSERVATORY:
 		  xy = new int[]{ LIBRARY_CONSERVATORY_HALLWAY_X, LIBRARY_CONSERVATORY_HALLWAY_Y + HALLWAY_LENGTH / 2 };
-	  else if( id == Card.LOUNGE_DINING.value() )
+		  break;
+	  	case LOUNGE_DINING:
 		  xy = new int[] { LOUNGE_DINING_HALLWAY_X, LOUNGE_DINING_HALLWAY_Y + HALLWAY_LENGTH / 2 };
-	  else if( id == Card.STUDY_HALL.value() )
+		  break;
+	  	case STUDY_HALL:
 		  xy = new int[] { STUDY_HALL_HALLWAY_X + HALLWAY_LENGTH / 2, STUDY_HALL_HALLWAY_Y };
-	  else if( id == Card.STUDY_LIBRARY.value() )
+		  break;
+	  	case STUDY_LIBRARY:
 		  xy = new int[] { STUDY_LIBRARY_HALLWAY_X, STUDY_LIBRARY_HALLWAY_Y + HALLWAY_LENGTH / 2 };
+		  break;
 	  
 	  // ROOM Coordinates
-	  if( id == Card.BALL.value() )
+	  	case BALL:
 		  xy = new int[] { BALL_X, BALL_Y };
-	  else if( id == Card.BILLIARD.value() )
+		  break;
+	  	case BILLIARD:
 		  xy = new int[] { BILLIARD_X, BILLIARD_Y };
-	  else if( id == Card.DINING.value() )
+		  break;
+	  	case DINING:
 		  xy = new int[] { DINING_X, DINING_Y };
-	  else if( id == Card.HALL.value() )
+		  break;
+	  	case HALL:
 		  xy = new int[] { HALL_X, HALL_Y };
-	  else if( id == Card.KITCHEN.value() )
+		  break;
+	  	case KITCHEN:
 		  xy = new int[] { KITCHEN_X, KITCHEN_Y };
-	  else if( id == Card.LIBRARY.value() )
+		  break;
+	  	case LIBRARY:
 		  xy = new int[] { LIBRARY_X, LIBRARY_Y };
-	  else if( id == Card.LOUNGE.value() )
+		  break;
+	  	case LOUNGE:
 		  xy = new int[] { LOUNGE_X, LOUNGE_Y };
-	  else if( id == Card.STUDY.value() )
+		  break;
+	  	case STUDY:
 		  xy = new int[] { STUDY_X, STUDY_Y };
-	  else if( id == Card.CONSERVATORY.value() )
+		  break;
+	  	case CONSERVATORY:
 		  xy = new int[] { CONSERVATORY_X, CONSERVATORY_Y };
-	  
+		  break;
+	  }
 	  return xy;
   }
   
@@ -291,10 +314,14 @@ public class GameBoardPanel extends JPanel
     rm1.addOccupant( new Character( Card.COL_MUSTARD.value() ) );
     rm1.addOccupant( new Character( Card.PROF_PLUM.value() ) );
     rm1.addOccupant( new Character( Card.MISS_SCARLET.value() ) );
-    rm1.addOccupant( new Character( Card.MR_GREEN.value() ) );
-    rm1.addOccupant( new Character( Card.MRS_PEACOCK.value() ) );
-    rm1.addOccupant( new Character( Card.MRS_WHITE.value() ) );
+    Room rm2 = new Room( Card.BILLIARD.value(), Card.BILLIARD.getName() );
+    rm2.addOccupant( new Character( Card.MR_GREEN.value() ) );
+    rm2.addOccupant( new Character( Card.MRS_PEACOCK.value() ) );
+    Room rm3 = new Room( Card.CONSERVATORY.value(), Card.CONSERVATORY.getName() );
+    rm3.addOccupant( new Character( Card.MRS_WHITE.value() ) );
     gbp.loc.add( rm1 );
+    gbp.loc.add( rm2 );
+    gbp.loc.add( rm3 );
     
     frame.add( gbp ); 
   } 
