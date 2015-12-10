@@ -139,25 +139,17 @@ public class GameBoardPanel extends JPanel
 			  List<Character> charList = l.getOccupants();
 			  if( charList != null )
 			  {
-			       if( l instanceof Hallway )
-			       {
-			    	   xy = getDrawPoint( ((Hallway) l).id );
-			    	   Color color = g.getColor();
-			    	   g.setColor( l.getOccupants().get(0).color);
-			    	   g.fillOval(xy[0], xy[1], HALLWAY_WIDTH, HALLWAY_WIDTH);
+		    	  xy = getDrawPoint( l.getId() );
+	 			  for( int i = 0; i < charList.size(); i++ )
+		    	  {
+	 				  Color color = g.getColor();
+			    	   g.setColor( l.getOccupants().get(i).color);
+			    	   if( l instanceof Hallway )
+				    	   g.fillOval( xy[0], xy[1], HALLWAY_WIDTH, HALLWAY_WIDTH );
+			    	   else
+			    		   g.fillOval( xy[0] + i * HALLWAY_WIDTH, xy[1] + HALLWAY_WIDTH, HALLWAY_WIDTH, HALLWAY_WIDTH );
 			    	   g.setColor( color );
-			       }
-			       else if( l instanceof Room )
-			       {
-			    	   xy = getDrawPoint( ((Room) l).getId() );
-		 			  for( int i = 0; i < charList.size(); i++ )
-			    	  {
-		 				  Color color = g.getColor();
-				    	   g.setColor( l.getOccupants().get(i).color);
-				    	   g.fillOval(xy[0] + i*HALLWAY_WIDTH, xy[1] + HALLWAY_WIDTH, HALLWAY_WIDTH, HALLWAY_WIDTH);
-				    	   g.setColor( color );
-			    	  }
-			       }
+		    	  }
 			  }
 		  }
 	  }
