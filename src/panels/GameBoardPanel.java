@@ -136,8 +136,8 @@ public class GameBoardPanel extends JPanel
 		  for( Location l : loc )
 		  {
 			  int[] xy;
-			  
-			  if( l.getOccupants() != null )
+			  List<Character> charList = l.getOccupants();
+			  if( charList != null )
 			  {
 			       if( l instanceof Hallway )
 			       {
@@ -150,8 +150,13 @@ public class GameBoardPanel extends JPanel
 			       else if( l instanceof Room )
 			       {
 			    	   xy = getDrawPoint( ((Room) l).getId() );
-			 		  List<Character> charList = l.getOccupants();
-			    	   // TODO: draw Ovals for number of occupants
+		 			  for( int i = 0; i < charList.size(); i++ )
+			    	  {
+		 				  Color color = g.getColor();
+				    	   g.setColor( l.getOccupants().get(i).color);
+				    	   g.fillOval(xy[0] + i*HALLWAY_WIDTH, xy[1] + HALLWAY_WIDTH, HALLWAY_WIDTH, HALLWAY_WIDTH);
+				    	   g.setColor( color );
+			    	  }
 			       }
 			  }
 		  }
@@ -290,9 +295,15 @@ public class GameBoardPanel extends JPanel
     gbp.loc.add( hw1 );
     gbp.loc.add( hw2 );
     
+    Room rm1 = new Room( Card.STUDY.value(), Card.STUDY.getName() );
+    rm1.addOccupant( new Character( Card.COL_MUSTARD.value() ) );
+    rm1.addOccupant( new Character( Card.PROF_PLUM.value() ) );
+    rm1.addOccupant( new Character( Card.MISS_SCARLET.value() ) );
+    rm1.addOccupant( new Character( Card.MR_GREEN.value() ) );
+    rm1.addOccupant( new Character( Card.MRS_PEACOCK.value() ) );
+    rm1.addOccupant( new Character( Card.MRS_WHITE.value() ) );
+    gbp.loc.add( rm1 );
+    
     frame.add( gbp ); 
   } 
-} 
- 
- 
- 
+}
