@@ -1,19 +1,22 @@
 package client;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 
+import objects.Action;
+import objects.Card;
+import objects.Message;
+import objects.Player;
+import objects.Character;
 import panels.ConnectToServerPanel;
 import panels.DetectiveNotePanel;
 import panels.GameBoardPanel;
@@ -23,37 +26,42 @@ import panels.UserDecisionPanel;
 public class MainApplication 
 	extends JFrame
 {
-	/*
+	/**
 	 *  Set time out to 5s
 	 */
 	protected final static int TIME_OUT = 5000;
 	
 	protected JPanel mainPane;
 	
-	/*
+	/**
 	 * Connect-to-Server panel
 	 */
-	protected JPanel ctsPane;
+	protected ConnectToServerPanel ctsPane;
 	
-	/*
+	/**
 	 * User-decision panel
 	 */
-	protected JPanel udPane;
+	protected UserDecisionPanel udPane;
 	
-	/*
+	/**
 	 * Detective note panel
 	 */
-	protected JPanel dnPane;
+	protected DetectiveNotePanel dnPane;
 	
-	/*
+	/**
 	 * Gameboard panel
 	 */
-	protected JPanel gbPane;
+	protected GameBoardPanel gbPane;
 	
 	protected Socket socket;
 	
 	protected boolean connected;
 	
+	/** 
+	 * should be same as Character ID, i.e.
+	 * int value of Card.MR_GREEN
+	 */
+	protected int playerId; 
 	
 	public MainApplication()
 	{
@@ -77,8 +85,12 @@ public class MainApplication
 				String ipAddress = ((ConnectToServerPanel) ctsPane).input.getText();
 				try
 				{
-					socket = new Socket();
-					socket.connect( new InetSocketAddress( ipAddress, 8889 ), TIME_OUT );
+					// Secret way to go to Game Panel without connecting to Server
+					if( !ipAddress.equals( "a" ) )
+					{
+						socket = new Socket();
+						socket.connect( new InetSocketAddress( ipAddress, 8889 ), TIME_OUT );
+					}
 					mainPane.remove( ctsPane );
 					openGameGUI();
 				} 
@@ -107,28 +119,34 @@ public class MainApplication
 	{	
 		udPane = new UserDecisionPanel();
 		udPane.setBorder( BorderFactory.createLineBorder( Color.BLACK ) );
-		( (UserDecisionPanel) udPane ).suggestionAccusationPanel.okay.addActionListener(
-				new ActionListener()
-				{
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						// TODO send suggestion/accusation decision to Server
-						
-					}	
-				} );
+		udPane.suggestionAccusationPanel.suggestionButton.addActionListener(
+			new ActionListener()
+			{
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					Message rplMsg = new Message();
+					rplMsg.action = Action.MAKE_SUGGESTION;
+					// TODO: build up suggestion/accusation info
+					
+				}	
+			} );
+		
+		udPane.suggestionAccusationPanel.accusationButton.addActionListener(
+			new ActionListener()
+			{
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					Message rplMsg = new Message();
+					rplMsg.action = Action.ACCUSATION;
+					// TODO: build up suggestion/accusation info
+				}	
+			} );
 		
 		dnPane = new DetectiveNotePanel();
 		dnPane.setBorder( BorderFactory.createLineBorder( Color.BLACK ) );
 		
 		gbPane = new GameBoardPanel();
 		gbPane.setBorder( BorderFactory.createLineBorder( Color.BLACK ) );
-		
-//		JPanel bottomPane = new JPanel( new FlowLayout( FlowLayout.LEFT ) );
-//		bottomPane.add( udPane );
-//		bottomPane.add( dnPane );
-//		
-//		mainPane.add( gbPane, BorderLayout.PAGE_START );
-//		mainPane.add( bottomPane, BorderLayout.PAGE_END );
 		
 		mainPane.add( gbPane, BorderLayout.PAGE_START );
 		mainPane.add( udPane, BorderLayout.LINE_START );
@@ -143,6 +161,12 @@ public class MainApplication
 		setVisible( true );
 	}
 	
+	public void updateComponent( JPanel panel )
+	{
+		this.remove( panel );
+		this.add( panel );
+	}
+	
 	public static void main( String[] a )
 	{
 		SwingUtilities.invokeLater( new Runnable()
@@ -151,6 +175,13 @@ public class MainApplication
 			public void run() {
 				MainApplication app = new MainApplication();
 				app.makeConnection();
+				
+				// Message example for Controller to Client 
+				// for a particular Player to make suggestion
+				Message msg1 = new Message();
+				msg1.action = Action.MAKE_SUGGESTION;
+				msg1.player = new Player( new Character( Card.MR_GREEN.value() ) );
+				
 			}
 		});
 	}

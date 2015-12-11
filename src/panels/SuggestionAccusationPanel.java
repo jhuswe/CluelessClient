@@ -20,10 +20,8 @@ public class SuggestionAccusationPanel extends JPanel
 		"Miss Scarlet", "Col. Mustard", "Mrs. White",
 		"Mr. Green", "Prof. Plum", "Mrs. Peacock" };
 	
-	protected JLabel SuggestionLabel = new JLabel( "SUGGESTION" );
-	protected JLabel AccusationLabel = new JLabel( "ACCUSATION" );
 	public JButton accusationButton = new JButton( "Make Accusation" );
-	public JButton okay = new JButton( "Okay" );
+	public JButton suggestionButton = new JButton( "Make Suggestion" );
 	
 	public SuggestionAccusationPanel()
 	{
@@ -32,17 +30,7 @@ public class SuggestionAccusationPanel extends JPanel
 	}
 	
 	public void createComponents()
-	{
-//		accusationButton.addActionListener( new ActionListener() {
-//
-//			@Override
-//			public void actionPerformed(ActionEvent e) 
-//			{
-//				
-//			}
-//			
-//		});
-		
+	{	
 		JPanel mainPane = new JPanel( new BorderLayout() );
 		
 		GridBagConstraints gbc = new GridBagConstraints();
@@ -77,7 +65,7 @@ public class SuggestionAccusationPanel extends JPanel
 		mainPane.add( WeaponPane, BorderLayout.LINE_END );
 		
 		JPanel buttonPane = new JPanel( new BorderLayout() );
-		buttonPane.add( okay, BorderLayout.LINE_END );
+		buttonPane.add( suggestionButton, BorderLayout.LINE_END );
 		buttonPane.add( accusationButton, BorderLayout.LINE_START );
 		
 		add( mainPane, BorderLayout.CENTER );
