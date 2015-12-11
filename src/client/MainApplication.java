@@ -123,12 +123,12 @@ public class MainApplication
 		gbPane = new GameBoardPanel();
 		gbPane.setBorder( BorderFactory.createLineBorder( Color.BLACK ) );
 		
-		JPanel bottomPane = new JPanel( new FlowLayout( FlowLayout.LEFT ) );
-		bottomPane.add( udPane );
-		bottomPane.add( dnPane );
-		
-		mainPane.add( gbPane, BorderLayout.PAGE_START );
-		mainPane.add( bottomPane, BorderLayout.PAGE_END );
+//		JPanel bottomPane = new JPanel( new FlowLayout( FlowLayout.LEFT ) );
+//		bottomPane.add( udPane );
+//		bottomPane.add( dnPane );
+//		
+//		mainPane.add( gbPane, BorderLayout.PAGE_START );
+//		mainPane.add( bottomPane, BorderLayout.PAGE_END );
 		
 		mainPane.add( gbPane, BorderLayout.PAGE_START );
 		mainPane.add( udPane, BorderLayout.LINE_START );

@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -62,5 +63,14 @@ public class ConnectToServerPanel
 		pane.add( okay, gbc );
 		
 		add( pane );
+	}
+	
+	public static void main( String a[] ) 
+	{
+		JFrame frame = new JFrame();
+		frame.add( new ConnectToServerPanel( ) );
+		frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+		frame.pack();
+		frame.setVisible( true );
 	}
 }
