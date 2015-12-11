@@ -1,6 +1,9 @@
 package panels;
 
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
+
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -36,8 +39,11 @@ public class StatusPanel extends JPanel
 	public void createComponents()
 	{
 		setLayout( new BoxLayout( this, BoxLayout.Y_AXIS) );
+		setPreferredSize( new Dimension(300, 100) );
 		title.setFont( new Font( "Arial", Font.PLAIN, 20 ) );
-		add( title );
+		JPanel titlePane = new JPanel( new FlowLayout( FlowLayout.CENTER ) );
+		titlePane.add( title );
+		add( titlePane );
 	}
 	
 	/**

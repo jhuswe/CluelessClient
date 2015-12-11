@@ -3,9 +3,13 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -14,12 +18,15 @@ import javax.swing.SwingUtilities;
 
 import objects.Action;
 import objects.Card;
+import objects.InOut;
 import objects.Message;
+import objects.MessageBuilder;
 import objects.Player;
 import objects.Character;
 import panels.ConnectToServerPanel;
 import panels.DetectiveNotePanel;
 import panels.GameBoardPanel;
+import panels.StatusPanel;
 import panels.UserDecisionPanel;
 
 
@@ -53,9 +60,18 @@ public class MainApplication
 	 */
 	protected GameBoardPanel gbPane;
 	
+	/**
+	 * Status panel
+	 */
+	protected StatusPanel stPane;
+	
 	protected Socket socket;
 	
-	protected boolean connected;
+	protected InOut IOport;
+	
+	protected boolean started;
+	protected boolean endGame;
+	
 	
 	/** 
 	 * should be same as Character ID, i.e.
@@ -67,7 +83,22 @@ public class MainApplication
 	{
 		super( "Main Application" );
 		mainPane = new JPanel( new BorderLayout() );
-		connected = false;
+		started = false;
+		endGame = false;
+	}
+	
+	public void runGame()
+	{
+		while( !endGame )
+		{
+			Message msg = this.recvMsg(IOport.in);
+			if( msg.action == Action.INITIATE_CHARACTER )
+			{
+				started = true;
+				playerId = msg.player.getId();
+				this.logMessage( "Assigned Character: " + Card.getCard( playerId ).getName() );
+			}
+		}
 	}
 	
 	/**
@@ -85,12 +116,18 @@ public class MainApplication
 				String ipAddress = ((ConnectToServerPanel) ctsPane).input.getText();
 				try
 				{
-					// Secret way to go to Game Panel without connecting to Server
-					if( !ipAddress.equals( "a" ) )
-					{
-						socket = new Socket();
-						socket.connect( new InetSocketAddress( ipAddress, 8889 ), TIME_OUT );
-					}
+					// Secret way to quickly connect to Server at localhost
+					if( ipAddress.equals( "v" ) )
+						ipAddress = "127.0.0.1";
+					
+					socket = new Socket();
+					socket.connect( new InetSocketAddress( ipAddress, 8889 ), TIME_OUT );
+					
+					PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+		            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+		            
+		            IOport = new InOut(in, out);
+					
 					mainPane.remove( ctsPane );
 					openGameGUI();
 				} 
@@ -146,9 +183,16 @@ public class MainApplication
 		dnPane.setBorder( BorderFactory.createLineBorder( Color.BLACK ) );
 		
 		gbPane = new GameBoardPanel();
-		gbPane.setBorder( BorderFactory.createLineBorder( Color.BLACK ) );
+//		gbPane.setBorder( BorderFactory.createLineBorder( Color.BLACK ) );
 		
-		mainPane.add( gbPane, BorderLayout.PAGE_START );
+		stPane = new StatusPanel();
+//		stPane.setBorder( BorderFactory.createLineBorder( Color.BLACK ) );
+		
+		JPanel topPane = new JPanel( new BorderLayout() );
+		topPane.add( gbPane, BorderLayout.LINE_START );
+		topPane.add( stPane, BorderLayout.LINE_END );
+		
+		mainPane.add( topPane, BorderLayout.PAGE_START );
 		mainPane.add( udPane, BorderLayout.LINE_START );
 		mainPane.add( dnPane, BorderLayout.LINE_END );
 		
@@ -159,13 +203,44 @@ public class MainApplication
 		pack();
 		setLocationRelativeTo( null );
 		setVisible( true );
+		
+		runGame();
 	}
+	
+	
 	
 	public void updateComponent( JPanel panel )
 	{
 		this.remove( panel );
 		this.add( panel );
 	}
+	
+    //send a message to a single client
+    public void sendMsg(Message message, PrintWriter out) {
+    	String jsonText = MessageBuilder.SerializeMsg(message);
+    	
+    	out.println(jsonText);
+    }
+    
+    //convert jsonText to Message object
+    public Message recvMsg(BufferedReader in) {
+    	Message message = null;
+
+    	try {
+			String jsonText = in.readLine();
+			message = (Message) MessageBuilder.DeserializeMsg(jsonText);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
+    	return message;
+    }
+    
+    //wrapper for printing messages to the console
+    public void logMessage(String message) {
+    	System.out.println(message);
+    }
 	
 	public static void main( String[] a )
 	{
