@@ -223,27 +223,27 @@ public class MainApplication
 			
 			if( msg.action == Action.DISPROVE && msg.player.getId() == this.playerId )
 			{
-//				disprovePane.disproveButton.addActionListener( 
-//					new ActionListener()
-//					{
-//						@Override
-//						public void actionPerformed(ActionEvent e) {
-//							Message rplMsg = new Message();
-//							rplMsg.action = Action.DISPROVE;								
-//							rplMsg.player = new Player( new Character( playerId) );
-//							
-//							for( int i = 0; i < disprovePane.checkBox.size(); i++ )
-//							{
-//								if( disprovePane.checkBox.get( i ).isSelected() )
-//								{
-//									// TODO: set 
-//									break;
-//								}
-//							}
-//								
-//							sendMsg( rplMsg );
-//						}
-//					} );
+				disprovePane.disproveButton.addActionListener( 
+					new ActionListener()
+					{
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							Message rplMsg = new Message();
+							rplMsg.action = Action.DISPROVE;								
+							rplMsg.player = new Player( new Character( playerId) );
+							
+							for( int i = 0; i < disprovePane.checkBox.size(); i++ )
+							{
+								if( disprovePane.checkBox.get( i ).isSelected() )
+								{
+									// TODO: set 
+									break;
+								}
+							}
+								
+							sendMsg( rplMsg );
+						}
+					} );
 			}
 			
 			if( msg.action == Action.RECEIVE_DISPROVE_CARD )
