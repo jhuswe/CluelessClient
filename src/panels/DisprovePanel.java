@@ -6,6 +6,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.*;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
@@ -22,46 +23,48 @@ public class DisprovePanel extends JPanel
 
 	public ArrayList<JCheckBox> checkBox;
 	
-	public List<Card> playerCards;
+	public List<Card> playerCards = new ArrayList<Card>();
 	
 	public DisprovePanel()
 	{
 		super();
-		setLayout( new BorderLayout() );
+		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS) );
 		createComponents();
 	}
 	
 	public void createComponents()
 	{
-		JPanel mainPane = new JPanel( new FlowLayout(FlowLayout.CENTER) );
 		disproveButton.setEnabled (false);
-				
-		for( int i = 0; i < playerCards.length; i++ )
+		checkBox = new ArrayList<JCheckBox>();
+		
+		for(Card e: playerCards )
 		{
-			JPanel row = new JPanel( new FlowLayout( FlowLayout.RIGHT ) );
-			JLabel lb = new JLabel( SUSPECTS[i] );
-			JCheckBox box = new JCheckBox();
-			row.add( lb );
-			row.add( box );
-			gbc.gridwidth = GridBagConstraints.REMAINDER;
-			SuspectPane.add( row, gbc );
+			JCheckBox box = new JCheckBox (e.getName());
+			checkBox.add( box );
+			this.add( box );
 		}
 		
-		
-		mainPane.add( SuspectPane, BorderLayout.LINE_START );
-		
-		JPanel buttonPane = new JPanel( new BorderLayout() );
-		buttonPane.add( okay, BorderLayout.LINE_END );
-		buttonPane.add( accusationButton, BorderLayout.LINE_START );
-		
-		add( mainPane, BorderLayout.CENTER );
-		add( buttonPane, BorderLayout.PAGE_END );
+		this.add(disproveButton);
+
 	}
 	
 	public static void main( String a[] ) 
 	{
 		JFrame frame = new JFrame();
-		frame.add( new DisprovePanel() );
+		DisprovePanel dPanel = new DisprovePanel();
+			
+		
+		dPanel.playerCards = new ArrayList<Card>();
+		Card weapon = Card.KNIFE;
+		Card character = Card.PROF_PLUM;
+		Card room = Card.LIBRARY;
+		
+		dPanel.playerCards.add(weapon);
+		dPanel.playerCards.add(character);
+		dPanel.playerCards.add(room);
+		dPanel.createComponents();
+		
+		frame.add( dPanel );
 		frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
 		frame.pack();
 		frame.setVisible( true );
