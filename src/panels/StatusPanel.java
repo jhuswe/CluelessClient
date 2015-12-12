@@ -15,7 +15,7 @@ import objects.*;
 public class StatusPanel extends JPanel
 {
 	JLabel title = new JLabel( "Game Status" );
-	public JLabel playerConnect = new JLabel( "Waiting for all Players to connect" );
+	JLabel waitForPlayerConnect = new JLabel( "Waiting for all Players to connect" );
 
 	public StatusPanel()
 	{
@@ -24,7 +24,7 @@ public class StatusPanel extends JPanel
 	}
 	
 	public void updateStatus( Action action, String playerName )
-	{
+	{	
 		if( action == Action.MAKE_SUGGESTION )
 		{
 			this.add( new JLabel( "------------------------------") );
@@ -39,11 +39,12 @@ public class StatusPanel extends JPanel
 	public void createComponents()
 	{
 		setLayout( new BoxLayout( this, BoxLayout.Y_AXIS) );
-		setPreferredSize( new Dimension(300, 100) );
+		setPreferredSize( new Dimension(305, 100) );
 		title.setFont( new Font( "Arial", Font.PLAIN, 20 ) );
 		JPanel titlePane = new JPanel( new FlowLayout( FlowLayout.CENTER ) );
 		titlePane.add( title );
 		add( titlePane );
+		add( waitForPlayerConnect );
 	}
 	
 	/**

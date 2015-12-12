@@ -33,6 +33,9 @@ public class SuggestionAccusationPanel extends JPanel
 	{	
 		JPanel mainPane = new JPanel( new BorderLayout() );
 		
+		accusationButton.setEnabled( false );
+		suggestionButton.setEnabled( false );
+		
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.anchor = GridBagConstraints.NORTHEAST;
 		

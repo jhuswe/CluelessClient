@@ -12,6 +12,7 @@ import java.net.Socket;
 
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
@@ -92,59 +93,14 @@ public class MainApplication
 		while( !endGame )
 		{
 			Message msg = this.recvMsg(IOport.in);
-			if( msg.action == Action.INITIATE_CHARACTER )
+			if( msg != null && msg.action == Action.INITIATE_CHARACTER )
 			{
 				started = true;
 				playerId = msg.player.getId();
 				this.logMessage( "Assigned Character: " + Card.getCard( playerId ).getName() );
+				this.stPane.add( new JLabel( "Game Starts !!!" ) );
 			}
 		}
-	}
-	
-	/**
-	 * Open up Connect-to-Server panel to allow user to connect
-	 * to server by inputing an IP address. If connection is established,
-	 * Main Panel would be opened up that allows user to play game on.
-	 */
-	protected void makeConnection()
-	{
-		ctsPane = new ConnectToServerPanel();		
-		( (ConnectToServerPanel) ctsPane ).okay.addActionListener( new ActionListener() 
-		{
-			@Override
-			public void actionPerformed(ActionEvent event) {
-				String ipAddress = ((ConnectToServerPanel) ctsPane).input.getText();
-				try
-				{
-					// Secret way to quickly connect to Server at localhost
-					if( ipAddress.equals( "v" ) )
-						ipAddress = "127.0.0.1";
-					
-					socket = new Socket();
-					socket.connect( new InetSocketAddress( ipAddress, 8889 ), TIME_OUT );
-					
-					PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-		            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-		            
-		            IOport = new InOut(in, out);
-					
-					mainPane.remove( ctsPane );
-					openGameGUI();
-				} 
-				catch( IOException e ) 
-				{ 
-					System.out.println( "ERROR:: " + e );
-					( (ConnectToServerPanel) ctsPane ).label2.setVisible( true );
-				}
-			}
-		} );
-		
-		mainPane.add( ctsPane );
-		add( mainPane );
-		setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
-		pack();
-		setLocationRelativeTo( null );
-		setVisible( true );
 	}
 	
 	/**
@@ -186,15 +142,15 @@ public class MainApplication
 //		gbPane.setBorder( BorderFactory.createLineBorder( Color.BLACK ) );
 		
 		stPane = new StatusPanel();
-//		stPane.setBorder( BorderFactory.createLineBorder( Color.BLACK ) );
+		stPane.setBorder( BorderFactory.createLineBorder( Color.BLACK ) );
 		
 		JPanel topPane = new JPanel( new BorderLayout() );
 		topPane.add( gbPane, BorderLayout.LINE_START );
 		topPane.add( stPane, BorderLayout.LINE_END );
 		
 		mainPane.add( topPane, BorderLayout.PAGE_START );
-		mainPane.add( udPane, BorderLayout.LINE_START );
-		mainPane.add( dnPane, BorderLayout.LINE_END );
+		mainPane.add( dnPane, BorderLayout.LINE_START );
+		mainPane.add( udPane, BorderLayout.LINE_END );
 		
 		JScrollPane scroll = new JScrollPane( mainPane );
 		add( scroll );
@@ -204,10 +160,58 @@ public class MainApplication
 		setLocationRelativeTo( null );
 		setVisible( true );
 		
-		runGame();
+		( new Thread() {
+			public void run() {
+				runGame();
+			}
+		}).start();
+		
 	}
-	
-	
+	/**
+	 * Open up Connect-to-Server panel to allow user to connect
+	 * to server by inputing an IP address. If connection is established,
+	 * Main Panel would be opened up that allows user to play game on.
+	 */
+	protected void makeConnection()
+	{
+		ctsPane = new ConnectToServerPanel();		
+		( (ConnectToServerPanel) ctsPane ).okay.addActionListener( new ActionListener() 
+		{
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				String ipAddress = ((ConnectToServerPanel) ctsPane).input.getText();
+				try
+				{
+					// Secret way to quickly connect to Server at localhost
+					if( ipAddress.equals( "v" ) )
+						ipAddress = "127.0.0.1";
+					
+					socket = new Socket();
+					socket.connect( new InetSocketAddress( ipAddress, 8889 ), TIME_OUT );
+					
+					PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+		            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+		            
+		            IOport = new InOut(in, out);
+					
+					mainPane.remove( ctsPane );
+					openGameGUI();
+				} 
+				catch( IOException e ) 
+				{ 
+					System.out.println( "[ this.makeConnection() ] ERROR:: " + e );
+					( (ConnectToServerPanel) ctsPane ).label2.setVisible( true );
+				}
+			}
+		} );
+		
+		mainPane.add( ctsPane );
+		add( mainPane );
+		setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+		pack();
+		setLocationRelativeTo( null );
+		setVisible( true );
+	}
 	
 	public void updateComponent( JPanel panel )
 	{
@@ -227,8 +231,8 @@ public class MainApplication
     	Message message = null;
 
     	try {
-			String jsonText = in.readLine();
-			message = (Message) MessageBuilder.DeserializeMsg(jsonText);
+				String jsonText = in.readLine();
+				message = (Message) MessageBuilder.DeserializeMsg(jsonText);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
