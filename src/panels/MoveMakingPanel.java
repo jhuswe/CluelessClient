@@ -1,20 +1,25 @@
 package panels;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-
 import objects.Card;
+import objects.Hallway;
+import objects.Location;
+import objects.Room;
 
 public class MoveMakingPanel extends JPanel 
 {
 	boolean init;
-	JButton okayButton;
-	JCheckBox loc0;
-	JCheckBox loc1;
-	JCheckBox loc2;
+	public JButton okayButton;
+	public ArrayList<JCheckBox> checkBox;
+	int chosenLocId = -1;
 	
 	JLabel noMove = new JLabel( "No Move Available");
 	
@@ -25,33 +30,38 @@ public class MoveMakingPanel extends JPanel
 		init = true;
 	}
 	
-	public void createComponents( int[] moves )
+	public void createComponents( List<Location> moves )
 	{
 		if( init )
 			removeAll();
-		
 		this.setLayout( new BoxLayout( this, BoxLayout.Y_AXIS ) );
+		checkBox = new ArrayList<JCheckBox>();
+		for( int i = 0; i < moves.size(); i++ )
+		{
+			JCheckBox box =  new JCheckBox( moves.get(i).getName() );
+			checkBox.add( box );
+			this.add( box );
+		}
 		
-		if( moves.length == 0 || moves == null )
-		{
-			noMove.setEnabled( true );
-			this.add( noMove );
-		}
-		else if( moves.length == 1 )
-		{
-			loc0 = new JCheckBox( (Card.getCard( moves[0] )).getName() );
-			this.add( loc0 );
-		}
-		else if( moves.length ==2 )
-		{
-			loc1 = new JCheckBox( (Card.getCard( moves[1] )).getName() );
-			this.add( loc1 );
-		}
-		else if( moves.length == 3 )
-		{
-			loc2 = new JCheckBox( (Card.getCard( moves[2] )).getName() );
-			this.add( loc2 );
-		}
+		okayButton = new JButton( "Okay" );
 		this.add( okayButton );
+	}
+	
+	public static void main( String a[] ) 
+	{
+		JFrame frame = new JFrame();
+		MoveMakingPanel mmPane = new MoveMakingPanel();
+		frame.add( mmPane );
+		
+		ArrayList<Location> loc = new ArrayList<Location>();
+		loc.add( new Room(Card.BALL.value()) );
+		loc.add( new Hallway(Card.BALL_KITCHEN.value()));
+		loc.add( new Hallway(Card.BILLIARD_BALL.value()));
+		
+		mmPane.createComponents( loc );
+		
+		frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+		frame.pack();
+		frame.setVisible( true );
 	}
 }

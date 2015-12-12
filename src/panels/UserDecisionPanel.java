@@ -1,19 +1,8 @@
 package panels;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -44,6 +33,20 @@ public class UserDecisionPanel
 		
 		add( labelPane );
 		add( suggestionAccusationPanel );
+	}
+	
+	public void switchToMoveMakingPanel()
+	{
+		this.remove( suggestionAccusationPanel );
+		moveMakingPanel = new MoveMakingPanel();
+		this.add( moveMakingPanel );
+	}
+	
+	public void switchToSuggestionAccusationPanel()
+	{
+		this.remove( moveMakingPanel );
+		suggestionAccusationPanel = new SuggestionAccusationPanel();
+		this.add( suggestionAccusationPanel );
 	}
 	
 	public static void main( String a[] ) 

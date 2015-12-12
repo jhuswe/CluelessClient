@@ -27,6 +27,7 @@ import objects.Character;
 import panels.ConnectToServerPanel;
 import panels.DetectiveNotePanel;
 import panels.GameBoardPanel;
+import panels.MoveMakingPanel;
 import panels.StatusPanel;
 import panels.UserDecisionPanel;
 
@@ -70,9 +71,7 @@ public class MainApplication
 	
 	protected InOut IOport;
 	
-	protected boolean started;
 	protected boolean endGame;
-	
 	
 	/** 
 	 * should be same as Character ID, i.e.
@@ -84,7 +83,6 @@ public class MainApplication
 	{
 		super( "Main Application" );
 		mainPane = new JPanel( new BorderLayout() );
-		started = false;
 		endGame = false;
 	}
 	
@@ -92,14 +90,98 @@ public class MainApplication
 	{
 		while( !endGame )
 		{
-			Message msg = this.recvMsg(IOport.in);
-			if( msg != null && msg.action == Action.INITIATE_CHARACTER )
+			Message msg = this.recvMsg();
+			
+			if( msg == null )
+				return;
+			
+			if( msg.action == Action.INITIATE_CHARACTER )
 			{
-				started = true;
 				playerId = msg.player.getId();
 				this.logMessage( "Assigned Character: " + Card.getCard( playerId ).getName() );
 				this.stPane.add( new JLabel( "Game Starts !!!" ) );
+				this.stPane.add( new JLabel( "Assigned Character: " + Card.getCard( playerId ).getName() ) );
 			}
+			
+			if( msg.action == Action.MOVE )
+			{
+				this.logMessage( "Your turn (" + Card.getCard( this.playerId ) + ") to MOVE" );
+				udPane.switchToMoveMakingPanel();
+				final MoveMakingPanel mmPane = udPane.moveMakingPanel;
+				mmPane.createComponents( msg.availableMoves );
+				mmPane.okayButton.addActionListener( 
+					new ActionListener()
+					{
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							for( int i = 0; i < mmPane.checkBox.size(); i++ )
+							{
+								if( mmPane.checkBox.get( i ).isSelected() )
+								{
+									// TODO: create Message and send back
+								}
+							}
+						}
+					});
+			}
+			
+			if( msg.action == Action.MAKE_SUGGESTION )
+			{
+				this.logMessage( "Your turn (" + Card.getCard( this.playerId ) + ") to " + msg.action );
+				udPane.suggestionAccusationPanel.suggestionButton.addActionListener(
+					new ActionListener()
+					{
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							Message rplMsg = new Message();
+							rplMsg.action = Action.MAKE_SUGGESTION;
+							// TODO: build up suggestion/accusation info
+							
+							sendMsg( rplMsg );
+							
+						}	
+					} );
+					
+				udPane.suggestionAccusationPanel.accusationButton.addActionListener(
+					new ActionListener()
+					{
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							Message rplMsg = new Message();
+							rplMsg.action = Action.ACCUSATION;
+							// TODO: build up suggestion/accusation info
+							
+							sendMsg( rplMsg );
+						}	
+					} );
+			}
+			
+			if( msg.action == Action.DISPROVE )
+			{
+				// TODO: add action listener to Disprove Panel's
+				// okay button to get selected Card
+				
+				Message rplMsg = new Message();
+				// TODO: create and send back Message
+				
+				sendMsg( rplMsg );
+			}
+			
+			if( msg.action == Action.RECEIVE_DISPROVE_CARD )
+			{
+				
+			}
+			
+			if( msg.action == Action.SHOW_SUGGESTION )
+			{
+				
+			}
+			
+			if( msg.action == Action.WIN || msg.action == Action.LOSE )
+			{
+				
+			}
+			
 		}
 	}
 	
@@ -112,34 +194,11 @@ public class MainApplication
 	{	
 		udPane = new UserDecisionPanel();
 		udPane.setBorder( BorderFactory.createLineBorder( Color.BLACK ) );
-		udPane.suggestionAccusationPanel.suggestionButton.addActionListener(
-			new ActionListener()
-			{
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					Message rplMsg = new Message();
-					rplMsg.action = Action.MAKE_SUGGESTION;
-					// TODO: build up suggestion/accusation info
-					
-				}	
-			} );
-		
-		udPane.suggestionAccusationPanel.accusationButton.addActionListener(
-			new ActionListener()
-			{
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					Message rplMsg = new Message();
-					rplMsg.action = Action.ACCUSATION;
-					// TODO: build up suggestion/accusation info
-				}	
-			} );
 		
 		dnPane = new DetectiveNotePanel();
 		dnPane.setBorder( BorderFactory.createLineBorder( Color.BLACK ) );
 		
 		gbPane = new GameBoardPanel();
-//		gbPane.setBorder( BorderFactory.createLineBorder( Color.BLACK ) );
 		
 		stPane = new StatusPanel();
 		stPane.setBorder( BorderFactory.createLineBorder( Color.BLACK ) );
@@ -191,9 +250,10 @@ public class MainApplication
 					
 					PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
 		            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-		            
 		            IOport = new InOut(in, out);
 					
+		            logMessage("[ MainApplication:makeConnection() ] Connection Established");
+		            
 					mainPane.remove( ctsPane );
 					openGameGUI();
 				} 
@@ -220,18 +280,18 @@ public class MainApplication
 	}
 	
     //send a message to a single client
-    public void sendMsg(Message message, PrintWriter out) {
+    public void sendMsg( Message message ) {
     	String jsonText = MessageBuilder.SerializeMsg(message);
     	
-    	out.println(jsonText);
+    	IOport.out.println(jsonText);
     }
     
     //convert jsonText to Message object
-    public Message recvMsg(BufferedReader in) {
+    public Message recvMsg() {
     	Message message = null;
 
     	try {
-				String jsonText = in.readLine();
+				String jsonText = IOport.in.readLine();
 				message = (Message) MessageBuilder.DeserializeMsg(jsonText);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
