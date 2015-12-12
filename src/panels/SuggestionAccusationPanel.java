@@ -4,24 +4,29 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import objects.Card;
+
 public class SuggestionAccusationPanel extends JPanel
 {
-	public static final String[] WEAPONS = { 
-		"Knife", "Candle Stick", "Rope",
-		"Lead Pipe", "Wrench", "Revolver" };
+	public Card[] WEAPONS = {
+		Card.KNIFE, Card.CANDLE_STICK, Card.ROPE,
+		Card.LEAD_PIPE, Card.WRENCH, Card.REVOLVER };
 	
-	public static final String[] SUSPECTS = { 
-		"Miss Scarlet", "Col. Mustard", "Mrs. White",
-		"Mr. Green", "Prof. Plum", "Mrs. Peacock" };
+	public Card[] SUSPECTS = { 
+		Card.MISS_SCARLET, Card.COL_MUSTARD, Card.MRS_WHITE, 
+		Card.MR_GREEN, Card.PROF_PLUM, Card.MRS_PEACOCK };
 	
 	public JButton accusationButton = new JButton( "Make Accusation" );
 	public JButton suggestionButton = new JButton( "Make Suggestion" );
+	public ArrayList<JCheckBox> weaponBox;
+	public ArrayList<JCheckBox> suspectBox;
 	
 	public SuggestionAccusationPanel()
 	{
@@ -45,8 +50,9 @@ public class SuggestionAccusationPanel extends JPanel
 		for( int i = 0; i < SUSPECTS.length; i++ )
 		{
 			JPanel row = new JPanel( new FlowLayout( FlowLayout.RIGHT ) );
-			JLabel lb = new JLabel( SUSPECTS[i] );
+			JLabel lb = new JLabel( SUSPECTS[i].getName() );
 			JCheckBox box = new JCheckBox();
+			suspectBox.add( box );
 			row.add( lb );
 			row.add( box );
 			gbc.gridwidth = GridBagConstraints.REMAINDER;
@@ -56,8 +62,9 @@ public class SuggestionAccusationPanel extends JPanel
 		for( int i = 0; i < WEAPONS.length; i++ )
 		{
 			JPanel row = new JPanel( new FlowLayout( FlowLayout.RIGHT ) );
-			JLabel lb = new JLabel( WEAPONS[i] );
+			JLabel lb = new JLabel( WEAPONS[i].getName() );
 			JCheckBox box = new JCheckBox();
+			weaponBox.add( box );
 			row.add( lb );
 			row.add( box );
 			gbc.gridwidth = GridBagConstraints.REMAINDER;

@@ -2,7 +2,9 @@ package panels;
 
 import java.awt.FlowLayout;
 import java.awt.Font;
+
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -47,6 +49,12 @@ public class UserDecisionPanel
 		this.remove( moveMakingPanel );
 		suggestionAccusationPanel = new SuggestionAccusationPanel();
 		this.add( suggestionAccusationPanel );
+	}
+	
+	public void setInactive( boolean set )
+	{
+		this.suggestionAccusationPanel.accusationButton.setEnabled( set );
+		this.moveMakingPanel.okayButton.setEnabled( set );
 	}
 	
 	public static void main( String a[] ) 

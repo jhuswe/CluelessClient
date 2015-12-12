@@ -20,6 +20,7 @@ import javax.swing.SwingUtilities;
 import objects.Action;
 import objects.Card;
 import objects.InOut;
+import objects.Location;
 import objects.Message;
 import objects.MessageBuilder;
 import objects.Player;
@@ -29,6 +30,7 @@ import panels.DetectiveNotePanel;
 import panels.GameBoardPanel;
 import panels.MoveMakingPanel;
 import panels.StatusPanel;
+import panels.SuggestionAccusationPanel;
 import panels.UserDecisionPanel;
 
 
@@ -79,6 +81,7 @@ public class MainApplication
 	 */
 	protected int playerId; 
 	
+	
 	public MainApplication()
 	{
 		super( "Main Application" );
@@ -90,22 +93,24 @@ public class MainApplication
 	{
 		while( !endGame )
 		{
-			Message msg = this.recvMsg();
+			final Message msg = this.recvMsg();
 			
 			if( msg == null )
 				return;
 			
+			this.logMessage( "[ Message ] " + msg.action + " for Player " + msg.player.getName() );
+			
 			if( msg.action == Action.INITIATE_CHARACTER )
 			{
 				playerId = msg.player.getId();
+				// TODO: use List of cards in player and give that list to Disprove Panel
 				this.logMessage( "Assigned Character: " + Card.getCard( playerId ).getName() );
 				this.stPane.add( new JLabel( "Game Starts !!!" ) );
 				this.stPane.add( new JLabel( "Assigned Character: " + Card.getCard( playerId ).getName() ) );
 			}
 			
-			if( msg.action == Action.MOVE )
+			if( msg.action == Action.MOVE && msg.player.getId() == this.playerId )
 			{
-				this.logMessage( "Your turn (" + Card.getCard( this.playerId ) + ") to MOVE" );
 				udPane.switchToMoveMakingPanel();
 				final MoveMakingPanel mmPane = udPane.moveMakingPanel;
 				mmPane.createComponents( msg.availableMoves );
@@ -114,35 +119,64 @@ public class MainApplication
 					{
 						@Override
 						public void actionPerformed(ActionEvent e) {
+							Message rplMsg = new Message();
+							rplMsg.action = Action.MOVE;
+							rplMsg.player = new Player( new Character( playerId) );
+							
 							for( int i = 0; i < mmPane.checkBox.size(); i++ )
 							{
 								if( mmPane.checkBox.get( i ).isSelected() )
 								{
-									// TODO: create Message and send back
+									Location selectedLoc = msg.availableMoves.get( i );
+									rplMsg.player.location = selectedLoc;
+									break;
 								}
 							}
+							
+							sendMsg( rplMsg );
 						}
-					});
+					} );
 			}
 			
-			if( msg.action == Action.MAKE_SUGGESTION )
+			if( msg.action == Action.MAKE_SUGGESTION && msg.player.getId() == this.playerId )
 			{
-				this.logMessage( "Your turn (" + Card.getCard( this.playerId ) + ") to " + msg.action );
-				udPane.suggestionAccusationPanel.suggestionButton.addActionListener(
+				final SuggestionAccusationPanel saPanel = udPane.suggestionAccusationPanel;
+				udPane.switchToSuggestionAccusationPanel();
+				udPane.setInactive( false );
+				saPanel.suggestionButton.addActionListener(
 					new ActionListener()
 					{
 						@Override
 						public void actionPerformed(ActionEvent e) {
 							Message rplMsg = new Message();
 							rplMsg.action = Action.MAKE_SUGGESTION;
-							// TODO: build up suggestion/accusation info
+							rplMsg.player = msg.player;
+							
+							rplMsg.suggestionAccusationInfo.add( msg.player.location.getId() );
+							
+							for( int i = 0; i < saPanel.weaponBox.size() ; i++ )
+							{
+								if( saPanel.weaponBox.get( i ).isSelected() )
+								{
+									rplMsg.suggestionAccusationInfo.add( saPanel.WEAPONS[i].value() );
+									break;
+								}
+							}
+							
+							for( int i = 0; i < saPanel.suspectBox.size() ; i++ )
+							{
+								if( saPanel.suspectBox.get( i ).isSelected() )
+								{
+									rplMsg.suggestionAccusationInfo.add( saPanel.SUSPECTS[i].value() );
+									break;
+								}
+							}
 							
 							sendMsg( rplMsg );
-							
 						}	
 					} );
 					
-				udPane.suggestionAccusationPanel.accusationButton.addActionListener(
+				saPanel.accusationButton.addActionListener(
 					new ActionListener()
 					{
 						@Override
@@ -156,7 +190,12 @@ public class MainApplication
 					} );
 			}
 			
-			if( msg.action == Action.DISPROVE )
+			if( msg.action == Action.UPDATE_PLAYER_LOCATION )
+			{
+				gbPane.updateGameBoard( msg.playerLocations );
+			}
+			
+			if( msg.action == Action.DISPROVE && msg.player.getId() == this.playerId )
 			{
 				// TODO: add action listener to Disprove Panel's
 				// okay button to get selected Card
@@ -226,6 +265,7 @@ public class MainApplication
 		}).start();
 		
 	}
+	
 	/**
 	 * Open up Connect-to-Server panel to allow user to connect
 	 * to server by inputing an IP address. If connection is established,
