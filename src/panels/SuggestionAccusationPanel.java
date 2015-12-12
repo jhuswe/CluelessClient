@@ -25,8 +25,8 @@ public class SuggestionAccusationPanel extends JPanel
 	
 	public JButton accusationButton = new JButton( "Make Accusation" );
 	public JButton suggestionButton = new JButton( "Make Suggestion" );
-	public ArrayList<JCheckBox> weaponBox;
-	public ArrayList<JCheckBox> suspectBox;
+	public ArrayList<JCheckBox> weaponBox = new ArrayList<JCheckBox>();
+	public ArrayList<JCheckBox> suspectBox = new ArrayList<JCheckBox>();
 	
 	public SuggestionAccusationPanel()
 	{
