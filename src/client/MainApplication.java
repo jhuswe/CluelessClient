@@ -27,6 +27,7 @@ import objects.Player;
 import objects.Character;
 import panels.ConnectToServerPanel;
 import panels.DetectiveNotePanel;
+import panels.DisprovePanel;
 import panels.GameBoardPanel;
 import panels.MoveMakingPanel;
 import panels.StatusPanel;
@@ -53,6 +54,11 @@ public class MainApplication
 	 * User-decision panel
 	 */
 	protected UserDecisionPanel udPane;
+	
+	/**
+	 * Disprove panel
+	 */
+	protected DisprovePanel disprovePane;
 	
 	/**
 	 * Detective note panel
@@ -152,13 +158,13 @@ public class MainApplication
 							rplMsg.action = Action.MAKE_SUGGESTION;
 							rplMsg.player = msg.player;
 							
-							rplMsg.suggestionAccusationInfo.add( msg.player.location.getId() );
+							rplMsg.SDAInfo.add( msg.player.location.getId() );
 							
 							for( int i = 0; i < saPanel.weaponBox.size() ; i++ )
 							{
 								if( saPanel.weaponBox.get( i ).isSelected() )
 								{
-									rplMsg.suggestionAccusationInfo.add( saPanel.WEAPONS[i].value() );
+									rplMsg.SDAInfo.add( saPanel.WEAPONS[i].value() );
 									break;
 								}
 							}
@@ -167,7 +173,7 @@ public class MainApplication
 							{
 								if( saPanel.suspectBox.get( i ).isSelected() )
 								{
-									rplMsg.suggestionAccusationInfo.add( saPanel.SUSPECTS[i].value() );
+									rplMsg.SDAInfo.add( saPanel.SUSPECTS[i].value() );
 									break;
 								}
 							}
@@ -183,7 +189,27 @@ public class MainApplication
 						public void actionPerformed(ActionEvent e) {
 							Message rplMsg = new Message();
 							rplMsg.action = Action.ACCUSATION;
-							// TODO: build up suggestion/accusation info
+							rplMsg.player = msg.player;
+							
+							rplMsg.SDAInfo.add( msg.player.location.getId() );
+							
+							for( int i = 0; i < saPanel.weaponBox.size() ; i++ )
+							{
+								if( saPanel.weaponBox.get( i ).isSelected() )
+								{
+									rplMsg.SDAInfo.add( saPanel.WEAPONS[i].value() );
+									break;
+								}
+							}
+							
+							for( int i = 0; i < saPanel.suspectBox.size() ; i++ )
+							{
+								if( saPanel.suspectBox.get( i ).isSelected() )
+								{
+									rplMsg.SDAInfo.add( saPanel.SUSPECTS[i].value() );
+									break;
+								}
+							}
 							
 							sendMsg( rplMsg );
 						}	
@@ -197,13 +223,27 @@ public class MainApplication
 			
 			if( msg.action == Action.DISPROVE && msg.player.getId() == this.playerId )
 			{
-				// TODO: add action listener to Disprove Panel's
-				// okay button to get selected Card
-				
-				Message rplMsg = new Message();
-				// TODO: create and send back Message
-				
-				sendMsg( rplMsg );
+//				disprovePane.disproveButton.addActionListener( 
+//					new ActionListener()
+//					{
+//						@Override
+//						public void actionPerformed(ActionEvent e) {
+//							Message rplMsg = new Message();
+//							rplMsg.action = Action.DISPROVE;								
+//							rplMsg.player = new Player( new Character( playerId) );
+//							
+//							for( int i = 0; i < disprovePane.checkBox.size(); i++ )
+//							{
+//								if( disprovePane.checkBox.get( i ).isSelected() )
+//								{
+//									// TODO: set 
+//									break;
+//								}
+//							}
+//								
+//							sendMsg( rplMsg );
+//						}
+//					} );
 			}
 			
 			if( msg.action == Action.RECEIVE_DISPROVE_CARD )
@@ -218,6 +258,7 @@ public class MainApplication
 			
 			if( msg.action == Action.WIN || msg.action == Action.LOSE )
 			{
+				udPane.setInactive( true );
 				
 			}
 			
