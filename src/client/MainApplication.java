@@ -114,6 +114,7 @@ public class MainApplication
 				this.logMessage( "Assigned Character: " + Card.getCard( playerId ).getName() );
 				this.stPane.add( new JLabel( "Game Starts !!!" ) );
 				this.stPane.add( new JLabel( "Assigned Character: " + Card.getCard( playerId ).getName() ) );
+				gbPane.updateGameBoard( msg.playerLocations );
 				this.revalidate();
 				this.repaint();
 			}

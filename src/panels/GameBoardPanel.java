@@ -125,8 +125,8 @@ public class GameBoardPanel extends JPanel
   public void updateGameBoard( List<Location> loc )
   {
   	  this.loc = loc;
+  	  this.revalidate();
   	  this.repaint();
-  	  this.loc = null;
   }
   
   public void drawOccupants(Graphics g) 
@@ -295,40 +295,46 @@ public class GameBoardPanel extends JPanel
   /**
    * Test!!!
    */
-//  public static void main (String[] args)  
-//  { 
-//    JFrame frame = new JFrame( "FrameView" ); 
-//    frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE ); 
-//    frame.setSize( 750, 700 );
-//    frame.setVisible( true ); 
-//     
-//    GameBoardPanel gbp = new GameBoardPanel(); 
-//    
-//    // TEST
-//    gbp.loc = new ArrayList<Location>();
-//    Hallway hw1 = new Hallway( Card.STUDY_HALL.value() ) ;
-//    hw1.addOccupant( new Character( Card.COL_MUSTARD.value() ) );
-//    Hallway hw2 = new Hallway( Card.HALL_LOUNGE.value() ) ;
-//    hw2.addOccupant( new Character( Card.MISS_SCARLET.value() ) );
-//    gbp.loc.add( hw1 );
-//    gbp.loc.add( hw2 );
-//    
-//    Room rm1 = new Room( Card.STUDY.value() );
-//    rm1.addOccupant( new Character( Card.COL_MUSTARD.value() ) );
-//    rm1.addOccupant( new Character( Card.PROF_PLUM.value() ) );
-//    rm1.addOccupant( new Character( Card.MISS_SCARLET.value() ) );
-//    
-//    Room rm2 = new Room( Card.BILLIARD.value() );
-//    rm2.addOccupant( new Character( Card.MR_GREEN.value() ) );
-//    rm2.addOccupant( new Character( Card.MRS_PEACOCK.value() ) );
-//    
-//    Room rm3 = new Room( Card.CONSERVATORY.value() );
-//    rm3.addOccupant( new Character( Card.MRS_WHITE.value() ) );
-//    
-//    gbp.loc.add( rm1 );
-//    gbp.loc.add( rm2 );
-//    gbp.loc.add( rm3 );
-//    
-//    frame.add( gbp ); 
-//  } 
+  public static void main (String[] args)  
+  { 
+    JFrame frame = new JFrame( "FrameView" ); 
+    frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE ); 
+    frame.setSize( 750, 700 );
+    frame.setVisible( true ); 
+     
+    GameBoardPanel gbp = new GameBoardPanel(); 
+    
+    // TEST
+    gbp.loc = new ArrayList<Location>();
+    Hallway hw1 = new Hallway( Card.STUDY_HALL.value() ) ;
+    hw1.addOccupant( new Character( Card.COL_MUSTARD.value() ) );
+    Hallway hw2 = new Hallway( Card.HALL_LOUNGE.value() ) ;
+    hw2.addOccupant( new Character( Card.MISS_SCARLET.value() ) );
+    gbp.loc.add( hw1 );
+    gbp.loc.add( hw2 );
+    
+    Room rm1 = new Room( Card.STUDY.value() );
+    rm1.addOccupant( new Character( Card.COL_MUSTARD.value() ) );
+    rm1.addOccupant( new Character( Card.PROF_PLUM.value() ) );
+    rm1.addOccupant( new Character( Card.MISS_SCARLET.value() ) );
+    
+    Room rm2 = new Room( Card.BILLIARD.value() );
+    rm2.addOccupant( new Character( Card.MR_GREEN.value() ) );
+    rm2.addOccupant( new Character( Card.MRS_PEACOCK.value() ) );
+    
+    Room rm3 = new Room( Card.CONSERVATORY.value() );
+    rm3.addOccupant( new Character( Card.MRS_WHITE.value() ) );
+    
+    gbp.loc.add( rm1 );
+    frame.add( gbp );
+    
+    ArrayList<Location> loc2 = new ArrayList<Location>();
+    
+    loc2.add( rm2 );
+    loc2.add( rm3 );
+    
+    
+    
+    gbp.updateGameBoard( loc2 );
+  } 
 }
