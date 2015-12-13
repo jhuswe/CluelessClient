@@ -115,6 +115,8 @@ public class MainApplication
 				this.stPane.add( new JLabel( "Game Starts !!!" ) );
 				this.stPane.add( new JLabel( "Assigned Character: " + Card.getCard( playerId ).getName() ) );
 				gbPane.updateGameBoard( msg.playerLocations );
+				disprovePane.playerCards = msg.player.cards;
+				disprovePane.createComponents();
 				this.revalidate();
 				this.repaint();
 			}
@@ -147,6 +149,9 @@ public class MainApplication
 							sendMsg( rplMsg );
 						}
 					} );
+				
+				this.revalidate();
+				this.repaint();
 			}
 			
 			if( msg.action == Action.MAKE_SUGGESTION && msg.player.getId() == this.playerId )
@@ -262,8 +267,7 @@ public class MainApplication
 				stPane.add( new JLabel( "You " + msg.action.getName() + ": " 
 						+ Card.getCard( msg.SDAInfo.get( 0 ) ) ) );
 				this.revalidate();
-				this.repaint();
-				
+				this.repaint();	
 			}
 			
 			if( msg.action == Action.SHOW_SUGGESTION )

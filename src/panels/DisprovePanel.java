@@ -19,41 +19,48 @@ import objects.*;
 public class DisprovePanel extends JPanel
 {
 	
-	protected JLabel dpLabel = new JLabel( "DISPROVE" );	
+	protected JLabel dpLabel = new JLabel( "Disprove" );	
 	public JButton disproveButton = new JButton( "Make Disprove" );
 
 	public ArrayList<JCheckBox> checkBox;
 	
 	public List<Card> playerCards = new ArrayList<Card>();
 	
+	boolean init;
+	
 	public DisprovePanel()
 	{
 		super();
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS) );
+		setLayout(new BorderLayout() );
 		createComponents();
+		init = true;
 	}
 	
 	public void createComponents()
 	{
+		if( init )
+			removeAll();
+		
 		dpLabel.setFont( new Font( "Arial", Font.PLAIN, 20 ) );
 		JPanel titlePane = new JPanel( new FlowLayout( FlowLayout.CENTER ) );
 		titlePane.add( dpLabel );
 		
-		this.add( titlePane );
+		this.add( titlePane, BorderLayout.PAGE_START );
 		
 		disproveButton.setEnabled (false);
 		checkBox = new ArrayList<JCheckBox>();
 		
-		
-		
+		JPanel centerPane = new JPanel();
+		centerPane.setLayout( new BoxLayout( centerPane, BoxLayout.Y_AXIS ) );
 		for(Card e: playerCards )
 		{
 			JCheckBox box = new JCheckBox (e.getName());
 			checkBox.add( box );
-			this.add( box );
+			centerPane.add( box );
 		}
 		
-		this.add(disproveButton);
+		this.add( centerPane, BorderLayout.CENTER );
+		this.add(disproveButton, BorderLayout.PAGE_END );
 
 	}
 	
