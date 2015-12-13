@@ -160,91 +160,93 @@ public class MainApplication
 				this.repaint();
 			}
 			
-			if( msg.action == Action.MAKE_SUGGESTION && msg.player.getId() == this.playerId )
+			if( msg.action == Action.MAKE_SUGGESTION )
 			{
 				gbPane.updateGameBoard( msg.playerLocations );
-				
-				final SuggestionAccusationPanel saPanel = udPane.suggestionAccusationPanel;
-				udPane.switchToSuggestionAccusationPanel();
-				udPane.setActive( true );
-				
 				stPane.add( new JLabel( "------------------------------") );
 				stPane.add( new JLabel(msg.player.getName() + " will make a Suggestion" ) );
 				
+				if(  msg.player.getId() == this.playerId )
+				{
+					final SuggestionAccusationPanel saPanel = udPane.suggestionAccusationPanel;
+					udPane.switchToSuggestionAccusationPanel();
+					udPane.setActive( true );
+				
+					saPanel.suggestionButton.addActionListener(
+						new ActionListener()
+						{
+							@Override
+							public void actionPerformed(ActionEvent e) {
+								
+								System.out.println( "[ SuggestionAccusationPanel ] SUGGESTION button is clicked" );
+								
+								Message rplMsg = new Message();
+								rplMsg.action = Action.MAKE_SUGGESTION;
+								rplMsg.player = msg.player;
+								
+								rplMsg.SDAInfo.add( msg.player.location.getId() );
+								
+								for( int i = 0; i < saPanel.weaponBox.size() ; i++ )
+								{
+									if( saPanel.weaponBox.get( i ).isSelected() )
+									{
+										rplMsg.SDAInfo.add( saPanel.WEAPONS[i].value() );
+										break;
+									}
+								}
+								
+								for( int i = 0; i < saPanel.suspectBox.size() ; i++ )
+								{
+									if( saPanel.suspectBox.get( i ).isSelected() )
+									{
+										rplMsg.SDAInfo.add( saPanel.SUSPECTS[i].value() );
+										break;
+									}
+								}
+								
+								sendMsg( rplMsg );
+							}	
+						} );
+						
+					saPanel.accusationButton.addActionListener(
+						new ActionListener()
+						{
+							@Override
+							public void actionPerformed(ActionEvent e) {
+								
+								System.out.println( "[ SuggestionAccusationPanel ] ACCUSATION button is clicked" );
+								
+								Message rplMsg = new Message();
+								rplMsg.action = Action.ACCUSATION;
+								rplMsg.player = msg.player;
+								
+								rplMsg.SDAInfo.add( msg.player.location.getId() );
+								
+								for( int i = 0; i < saPanel.weaponBox.size() ; i++ )
+								{
+									if( saPanel.weaponBox.get( i ).isSelected() )
+									{
+										rplMsg.SDAInfo.add( saPanel.WEAPONS[i].value() );
+										break;
+									}
+								}
+								
+								for( int i = 0; i < saPanel.suspectBox.size() ; i++ )
+								{
+									if( saPanel.suspectBox.get( i ).isSelected() )
+									{
+										rplMsg.SDAInfo.add( saPanel.SUSPECTS[i].value() );
+										break;
+									}
+								}
+								
+								sendMsg( rplMsg );
+							}	
+						} );
+				}
+				
 				this.revalidate();
 				this.repaint();
-				
-				saPanel.suggestionButton.addActionListener(
-					new ActionListener()
-					{
-						@Override
-						public void actionPerformed(ActionEvent e) {
-							
-							System.out.println( "[ SuggestionAccusationPanel ] SUGGESTION button is clicked" );
-							
-							Message rplMsg = new Message();
-							rplMsg.action = Action.MAKE_SUGGESTION;
-							rplMsg.player = msg.player;
-							
-							rplMsg.SDAInfo.add( msg.player.location.getId() );
-							
-							for( int i = 0; i < saPanel.weaponBox.size() ; i++ )
-							{
-								if( saPanel.weaponBox.get( i ).isSelected() )
-								{
-									rplMsg.SDAInfo.add( saPanel.WEAPONS[i].value() );
-									break;
-								}
-							}
-							
-							for( int i = 0; i < saPanel.suspectBox.size() ; i++ )
-							{
-								if( saPanel.suspectBox.get( i ).isSelected() )
-								{
-									rplMsg.SDAInfo.add( saPanel.SUSPECTS[i].value() );
-									break;
-								}
-							}
-							
-							sendMsg( rplMsg );
-						}	
-					} );
-					
-				saPanel.accusationButton.addActionListener(
-					new ActionListener()
-					{
-						@Override
-						public void actionPerformed(ActionEvent e) {
-							
-							System.out.println( "[ SuggestionAccusationPanel ] ACCUSATION button is clicked" );
-							
-							Message rplMsg = new Message();
-							rplMsg.action = Action.ACCUSATION;
-							rplMsg.player = msg.player;
-							
-							rplMsg.SDAInfo.add( msg.player.location.getId() );
-							
-							for( int i = 0; i < saPanel.weaponBox.size() ; i++ )
-							{
-								if( saPanel.weaponBox.get( i ).isSelected() )
-								{
-									rplMsg.SDAInfo.add( saPanel.WEAPONS[i].value() );
-									break;
-								}
-							}
-							
-							for( int i = 0; i < saPanel.suspectBox.size() ; i++ )
-							{
-								if( saPanel.suspectBox.get( i ).isSelected() )
-								{
-									rplMsg.SDAInfo.add( saPanel.SUSPECTS[i].value() );
-									break;
-								}
-							}
-							
-							sendMsg( rplMsg );
-						}	
-					} );
 			}
 			
 			if( msg.action == Action.UPDATE_PLAYER_LOCATION )
