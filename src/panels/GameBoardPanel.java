@@ -20,11 +20,11 @@ import objects.Room;
  
 public class GameBoardPanel extends JPanel 
 { 
-  final static int MARGIN = 50; 
-  final static int FONT_SIZE = 11;
-  final static int ROOM_WIDTH = 100; 
+  final static int MARGIN = 10; 
+  final static int FONT_SIZE = 8;
+  final static int ROOM_WIDTH = 80; 
   final static int HALLWAY_LENGTH = ROOM_WIDTH; 
-  final static int HALLWAY_WIDTH = 20;
+  final static int HALLWAY_WIDTH = 16;
   final static int SECRETPATH_LENGTH = HALLWAY_WIDTH;
   
   final static int PANEL_SIZE = MARGIN * 2 + ROOM_WIDTH * 3 + HALLWAY_LENGTH * 2;

@@ -30,6 +30,7 @@ public class MoveMakingPanel extends JPanel
 	public MoveMakingPanel()
 	{
 		super();
+		createComponents( null );
 		noMove.setEnabled( false );
 		init = true;
 	}
@@ -47,7 +48,7 @@ public class MoveMakingPanel extends JPanel
 		
 		checkBox = new ArrayList<JCheckBox>();
 		
-		if( moves.size() == 0 )
+		if( moves == null || moves.size() == 0 )
 		{
 			noMove.setEnabled( true );
 			add( noMove );

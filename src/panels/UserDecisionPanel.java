@@ -40,7 +40,7 @@ public class UserDecisionPanel
 	
 	public void switchToSuggestionAccusationPanel()
 	{
-		this.remove( moveMakingPanel );
+		this.removeAll();
 		suggestionAccusationPanel = new SuggestionAccusationPanel();
 		this.add( suggestionAccusationPanel );
 	}

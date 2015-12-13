@@ -27,6 +27,7 @@ import objects.Message;
 import objects.MessageBuilder;
 import objects.Player;
 import objects.Character;
+import objects.Room;
 import panels.ConnectToServerPanel;
 import panels.DetectiveNotePanel;
 import panels.DisprovePanel;
@@ -102,6 +103,14 @@ public class MainApplication
 		while( !endGame )
 		{
 			final Message msg = this.recvMsg();
+//			final Message msg = new Message();
+//			msg.action = Action.MAKE_SUGGESTION;
+//			msg.player = new Player( new Character( Card.MISS_SCARLET.value() ) );
+//			ArrayList<Location> loc = new ArrayList<Location>();
+//			Room hall = new Room( Card.HALL.value() );
+//			hall.addOccupant( msg.player.character );
+//			loc.add( hall );
+//			msg.playerLocations = loc;
 			
 			if( msg == null )
 				return;
