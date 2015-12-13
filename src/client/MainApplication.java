@@ -124,8 +124,6 @@ public class MainApplication
 				udPane.switchToMoveMakingPanel();
 				final MoveMakingPanel mmPane = udPane.moveMakingPanel;
 				mmPane.createComponents( msg.availableMoves );
-				this.revalidate();
-				this.repaint();
 				
 				mmPane.okayButton.addActionListener( 
 					new ActionListener()
@@ -153,6 +151,10 @@ public class MainApplication
 			
 			if( msg.action == Action.MAKE_SUGGESTION && msg.player.getId() == this.playerId )
 			{
+				gbPane.updateGameBoard( msg.playerLocations );
+				this.revalidate();
+				this.repaint();
+				
 				final SuggestionAccusationPanel saPanel = udPane.suggestionAccusationPanel;
 				udPane.switchToSuggestionAccusationPanel();
 				udPane.setInactive( false );
