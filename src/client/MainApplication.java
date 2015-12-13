@@ -179,6 +179,9 @@ public class MainApplication
 					{
 						@Override
 						public void actionPerformed(ActionEvent e) {
+							
+							System.out.println( "[ SuggestionAccusationPanel ] SUGGESTION button is clicked" );
+							
 							Message rplMsg = new Message();
 							rplMsg.action = Action.MAKE_SUGGESTION;
 							rplMsg.player = msg.player;
@@ -212,6 +215,9 @@ public class MainApplication
 					{
 						@Override
 						public void actionPerformed(ActionEvent e) {
+							
+							System.out.println( "[ SuggestionAccusationPanel ] ACCUSATION button is clicked" );
+							
 							Message rplMsg = new Message();
 							rplMsg.action = Action.ACCUSATION;
 							rplMsg.player = msg.player;
