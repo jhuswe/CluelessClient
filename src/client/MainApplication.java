@@ -111,13 +111,16 @@ public class MainApplication
 			if( msg.action == Action.INITIATE_CHARACTER )
 			{
 				playerId = msg.player.getId();
-				// TODO: use List of cards in player and give that list to Disprove Panel
+				
 				this.logMessage( "Assigned Character: " + Card.getCard( playerId ).getName() );
+				
 				this.stPane.add( new JLabel( "Game Starts !!!" ) );
 				this.stPane.add( new JLabel( "Assigned Character: " + Card.getCard( playerId ).getName() ) );
+				
 				gbPane.updateGameBoard( msg.playerLocations );
 				disprovePane.playerCards = msg.player.cards;
 				disprovePane.createComponents();
+				
 				this.revalidate();
 				this.repaint();
 			}
@@ -142,13 +145,12 @@ public class MainApplication
 								if( mmPane.checkBox.get( i ).isSelected() )
 								{
 									Location selectedLoc = msg.availableMoves.get( i );
-									rplMsg.playerLocations = new ArrayList<Location>();
-									rplMsg.playerLocations.add( selectedLoc );
+									rplMsg.player.location = selectedLoc;
 									break;
 								}
 							}
-							
 							sendMsg( rplMsg );
+//							mmPane.okayButton.setEnabled( false );
 						}
 					} );
 				
@@ -159,12 +161,14 @@ public class MainApplication
 			if( msg.action == Action.MAKE_SUGGESTION && msg.player.getId() == this.playerId )
 			{
 				gbPane.updateGameBoard( msg.playerLocations );
-				this.revalidate();
-				this.repaint();
 				
 				final SuggestionAccusationPanel saPanel = udPane.suggestionAccusationPanel;
 				udPane.switchToSuggestionAccusationPanel();
 				udPane.setInactive( false );
+				
+				this.revalidate();
+				this.repaint();
+				
 				saPanel.suggestionButton.addActionListener(
 					new ActionListener()
 					{
@@ -396,6 +400,8 @@ public class MainApplication
     	String jsonText = MessageBuilder.SerializeMsg(message);
     	
     	IOport.out.println(jsonText);
+    	if( IOport.out.checkError() )
+    		this.logMessage( "[ sendMsg ] sendMsg failed");
     }
     
     //convert jsonText to Message object
