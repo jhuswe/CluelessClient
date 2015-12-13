@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -141,7 +142,8 @@ public class MainApplication
 								if( mmPane.checkBox.get( i ).isSelected() )
 								{
 									Location selectedLoc = msg.availableMoves.get( i );
-									rplMsg.player.location = selectedLoc;
+									rplMsg.playerLocations = new ArrayList<Location>();
+									rplMsg.playerLocations.add( selectedLoc );
 									break;
 								}
 							}
@@ -252,7 +254,8 @@ public class MainApplication
 							{
 								if( disprovePane.checkBox.get( i ).isSelected() )
 								{
-									// TODO: set 
+									rplMsg.SDAInfo.add( 
+										disprovePane.playerCards.get( i ).value() );
 									break;
 								}
 							}
