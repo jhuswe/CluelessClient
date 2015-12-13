@@ -12,8 +12,7 @@ import javax.swing.JPanel;
 public class UserDecisionPanel
 	extends JPanel 
 {	
-	public JLabel udpLabel = new JLabel( "Have a Clue ?!" );
-	
+	public JLabel udpLabel = new JLabel( "Suggestion | Accusation" );
 	public SuggestionAccusationPanel suggestionAccusationPanel;
 	public MoveMakingPanel moveMakingPanel;
 	
@@ -29,11 +28,6 @@ public class UserDecisionPanel
 		suggestionAccusationPanel = new SuggestionAccusationPanel();
 		moveMakingPanel = new MoveMakingPanel();
 		
-		JPanel labelPane = new JPanel( new FlowLayout( FlowLayout.CENTER ) );
-		udpLabel.setFont(new Font("Arial", Font.PLAIN, 20));
-		labelPane.add( udpLabel );
-		
-		add( labelPane );
 		add( suggestionAccusationPanel );
 	}
 	

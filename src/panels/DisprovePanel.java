@@ -2,6 +2,7 @@ package panels;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.*;
@@ -34,8 +35,16 @@ public class DisprovePanel extends JPanel
 	
 	public void createComponents()
 	{
+		dpLabel.setFont( new Font( "Arial", Font.PLAIN, 20 ) );
+		JPanel titlePane = new JPanel( new FlowLayout( FlowLayout.CENTER ) );
+		titlePane.add( dpLabel );
+		
+		this.add( titlePane );
+		
 		disproveButton.setEnabled (false);
 		checkBox = new ArrayList<JCheckBox>();
+		
+		
 		
 		for(Card e: playerCards )
 		{

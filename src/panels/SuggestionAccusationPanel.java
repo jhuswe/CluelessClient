@@ -2,6 +2,7 @@ package panels;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.ArrayList;
@@ -22,6 +23,8 @@ public class SuggestionAccusationPanel extends JPanel
 	public Card[] SUSPECTS = { 
 		Card.MISS_SCARLET, Card.COL_MUSTARD, Card.MRS_WHITE, 
 		Card.MR_GREEN, Card.PROF_PLUM, Card.MRS_PEACOCK };
+	
+	public JLabel title = new JLabel( "Suggestion | Accusation" );
 	
 	public JButton accusationButton = new JButton( "Make Accusation" );
 	public JButton suggestionButton = new JButton( "Make Suggestion" );
@@ -77,6 +80,11 @@ public class SuggestionAccusationPanel extends JPanel
 		JPanel buttonPane = new JPanel( new BorderLayout() );
 		buttonPane.add( suggestionButton, BorderLayout.LINE_END );
 		buttonPane.add( accusationButton, BorderLayout.LINE_START );
+		
+		title.setFont(new Font("Arial", Font.PLAIN, 20));
+		JPanel labelPane = new JPanel( new FlowLayout( FlowLayout.CENTER ) ); 
+		labelPane.add( title );
+		this.add( labelPane, BorderLayout.PAGE_START );
 		
 		add( mainPane, BorderLayout.CENTER );
 		add( buttonPane, BorderLayout.PAGE_END );

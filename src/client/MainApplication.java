@@ -11,6 +11,7 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -113,6 +114,8 @@ public class MainApplication
 				this.logMessage( "Assigned Character: " + Card.getCard( playerId ).getName() );
 				this.stPane.add( new JLabel( "Game Starts !!!" ) );
 				this.stPane.add( new JLabel( "Assigned Character: " + Card.getCard( playerId ).getName() ) );
+				this.revalidate();
+				this.repaint();
 			}
 			
 			if( msg.action == Action.MOVE && msg.player.getId() == this.playerId )
@@ -120,6 +123,9 @@ public class MainApplication
 				udPane.switchToMoveMakingPanel();
 				final MoveMakingPanel mmPane = udPane.moveMakingPanel;
 				mmPane.createComponents( msg.availableMoves );
+				this.revalidate();
+				this.repaint();
+				
 				mmPane.okayButton.addActionListener( 
 					new ActionListener()
 					{
@@ -219,6 +225,8 @@ public class MainApplication
 			if( msg.action == Action.UPDATE_PLAYER_LOCATION )
 			{
 				gbPane.updateGameBoard( msg.playerLocations );
+				this.revalidate();
+				this.repaint();
 			}
 			
 			if( msg.action == Action.DISPROVE && msg.player.getId() == this.playerId )
@@ -250,6 +258,9 @@ public class MainApplication
 			{
 				stPane.add( new JLabel( "You " + msg.action.getName() + ": " 
 						+ Card.getCard( msg.SDAInfo.get( 0 ) ) ) );
+				this.revalidate();
+				this.repaint();
+				
 			}
 			
 			if( msg.action == Action.SHOW_SUGGESTION )
@@ -284,9 +295,18 @@ public class MainApplication
 		stPane = new StatusPanel();
 		stPane.setBorder( BorderFactory.createLineBorder( Color.BLACK ) );
 		
+		disprovePane = new DisprovePanel();
+		disprovePane.setBorder( BorderFactory.createLineBorder( Color.BLACK ) );
+		
 		JPanel topPane = new JPanel( new BorderLayout() );
+		JPanel rightPane = new JPanel();
+		rightPane.setLayout( new BoxLayout( rightPane, BoxLayout.Y_AXIS ) );
+		
+		rightPane.add( stPane );
+		rightPane.add( disprovePane );
+		
 		topPane.add( gbPane, BorderLayout.LINE_START );
-		topPane.add( stPane, BorderLayout.LINE_END );
+		topPane.add( rightPane, BorderLayout.LINE_END );
 		
 		mainPane.add( topPane, BorderLayout.PAGE_START );
 		mainPane.add( dnPane, BorderLayout.LINE_START );

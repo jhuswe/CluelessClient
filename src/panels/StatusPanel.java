@@ -39,7 +39,7 @@ public class StatusPanel extends JPanel
 	public void createComponents()
 	{
 		setLayout( new BoxLayout( this, BoxLayout.Y_AXIS) );
-		setPreferredSize( new Dimension(305, 100) );
+//		setPreferredSize( new Dimension(305, 100) );
 		title.setFont( new Font( "Arial", Font.PLAIN, 20 ) );
 		JPanel titlePane = new JPanel( new FlowLayout( FlowLayout.CENTER ) );
 		titlePane.add( title );
