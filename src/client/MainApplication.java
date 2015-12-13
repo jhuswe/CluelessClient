@@ -154,6 +154,8 @@ public class MainApplication
 						}
 					} );
 				
+				stPane.add( new JLabel(msg.player.getName() + " will make a Move" ) );
+				
 				this.revalidate();
 				this.repaint();
 			}
@@ -165,6 +167,9 @@ public class MainApplication
 				final SuggestionAccusationPanel saPanel = udPane.suggestionAccusationPanel;
 				udPane.switchToSuggestionAccusationPanel();
 				udPane.setInactive( false );
+				
+				stPane.add( new JLabel( "------------------------------") );
+				stPane.add( new JLabel(msg.player.getName() + " will make a Suggestion" ) );
 				
 				this.revalidate();
 				this.repaint();
@@ -245,6 +250,7 @@ public class MainApplication
 			
 			if( msg.action == Action.DISPROVE && msg.player.getId() == this.playerId )
 			{
+				disprovePane.disproveButton.setEnabled( true );
 				disprovePane.disproveButton.addActionListener( 
 					new ActionListener()
 					{
@@ -279,13 +285,56 @@ public class MainApplication
 			
 			if( msg.action == Action.SHOW_SUGGESTION )
 			{
-//				stPane.add( new JLabel( msg.player.getName() + " makes S"))
+				stPane.add( new JLabel( msg.player.getName() + " makes a Suggestion:" ) );
+				String str = "[";
+				for( Integer i : msg.SDAInfo) 
+				{
+					str = str + Card.getCard( i ).getName() + ",";
+				}
+				str += "]";
+				stPane.add( new JLabel( str ) );
+				this.revalidate();
+				this.repaint();
 			}
 			
-			if( msg.action == Action.WIN || msg.action == Action.LOSE )
+			if( msg.action == Action.LOSE )
 			{
 				udPane.setInactive( true );
+				stPane.add( new JLabel( msg.player.getName() + "made a WRONG Accusation" ) );
 				
+				String str = "[";
+				for( Integer i : msg.SDAInfo) 
+				{
+					str = str + Card.getCard( i ).getName() + ",";
+				}
+				str += "]";
+				
+				stPane.add( new JLabel( str ) );
+				stPane.add( new JLabel( msg.player.getName() + "lost the turn" ) );
+				
+				this.revalidate();
+				this.repaint();
+			}
+			
+			if( msg.action == Action.WIN )
+			{
+				endGame = true;
+				udPane.setInactive( true );
+				disprovePane.disproveButton.setEnabled( false );
+				
+				stPane.add( new JLabel( msg.player.getName() + "made a Correct Accusation" ) );
+				
+				String str = "[";
+				for( Integer i : msg.SDAInfo) 
+				{
+					str = str + Card.getCard( i ).getName() + ",";
+				}
+				str += "]";
+				
+				stPane.add( new JLabel( str ) );
+				
+				this.revalidate();
+				this.repaint();
 			}
 			
 		}
