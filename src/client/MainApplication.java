@@ -171,9 +171,6 @@ public class MainApplication
 				stPane.add( new JLabel( "------------------------------") );
 				stPane.add( new JLabel(msg.player.getName() + " will make a Suggestion" ) );
 				
-				this.revalidate();
-				this.repaint();
-				
 				saPanel.suggestionButton.addActionListener(
 					new ActionListener()
 					{
@@ -245,6 +242,9 @@ public class MainApplication
 							sendMsg( rplMsg );
 						}	
 					} );
+					
+				this.revalidate();
+				this.repaint();
 			}
 			
 			if( msg.action == Action.UPDATE_PLAYER_LOCATION )
@@ -279,6 +279,9 @@ public class MainApplication
 							sendMsg( rplMsg );
 						}
 					} );
+					
+				this.revalidate();
+				this.repaint();
 			}
 			
 			if( msg.action == Action.RECEIVE_DISPROVE_CARD )
