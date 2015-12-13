@@ -45,9 +45,10 @@ public class UserDecisionPanel
 		this.add( suggestionAccusationPanel );
 	}
 	
-	public void setInactive( boolean set )
+	public void setActive( boolean set )
 	{
 		this.suggestionAccusationPanel.accusationButton.setEnabled( set );
+		this.suggestionAccusationPanel.suggestionButton.setEnabled( set );
 		this.moveMakingPanel.okayButton.setEnabled( set );
 	}
 	

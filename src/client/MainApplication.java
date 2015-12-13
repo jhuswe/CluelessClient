@@ -166,7 +166,7 @@ public class MainApplication
 				
 				final SuggestionAccusationPanel saPanel = udPane.suggestionAccusationPanel;
 				udPane.switchToSuggestionAccusationPanel();
-				udPane.setInactive( false );
+				udPane.setActive( true );
 				
 				stPane.add( new JLabel( "------------------------------") );
 				stPane.add( new JLabel(msg.player.getName() + " will make a Suggestion" ) );
@@ -299,7 +299,7 @@ public class MainApplication
 			
 			if( msg.action == Action.LOSE )
 			{
-				udPane.setInactive( true );
+				udPane.setActive( false );
 				stPane.add( new JLabel( msg.player.getName() + "made a WRONG Accusation" ) );
 				
 				String str = "[";
@@ -319,7 +319,7 @@ public class MainApplication
 			if( msg.action == Action.WIN )
 			{
 				endGame = true;
-				udPane.setInactive( true );
+				udPane.setActive( true );
 				disprovePane.disproveButton.setEnabled( false );
 				
 				stPane.add( new JLabel( msg.player.getName() + "made a Correct Accusation" ) );
