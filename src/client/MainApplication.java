@@ -125,35 +125,40 @@ public class MainApplication
 				this.repaint();
 			}
 			
-			if( msg.action == Action.MOVE && msg.player.getId() == this.playerId )
+			if( msg.action == Action.MOVE )
 			{
-				udPane.switchToMoveMakingPanel();
-				final MoveMakingPanel mmPane = udPane.moveMakingPanel;
-				mmPane.createComponents( msg.availableMoves );
-				
-				mmPane.okayButton.addActionListener( 
-					new ActionListener()
-					{
-						@Override
-						public void actionPerformed(ActionEvent e) {
-							Message rplMsg = new Message();
-							rplMsg.action = Action.MOVE;
-							rplMsg.player = new Player( new Character( playerId) );
-							
-							for( int i = 0; i < mmPane.checkBox.size(); i++ )
-							{
-								if( mmPane.checkBox.get( i ).isSelected() )
+				if(  msg.player.getId() == this.playerId )
+				{
+					udPane.switchToMoveMakingPanel();
+					final MoveMakingPanel mmPane = udPane.moveMakingPanel;
+					mmPane.createComponents( msg.availableMoves );
+					
+					mmPane.okayButton.addActionListener( 
+						new ActionListener()
+						{
+							@Override
+							public void actionPerformed(ActionEvent e) {
+								System.out.println("Move making panel Okay button click");
+								
+								Message rplMsg = new Message();
+								rplMsg.action = Action.MOVE;
+								rplMsg.player = new Player( new Character( playerId) );
+								
+								for( int i = 0; i < mmPane.checkBox.size(); i++ )
 								{
-									Location selectedLoc = msg.availableMoves.get( i );
-									rplMsg.player.location = selectedLoc;
-									break;
+									if( mmPane.checkBox.get( i ).isSelected() )
+									{
+										Location selectedLoc = msg.availableMoves.get( i );
+										rplMsg.player.location = selectedLoc;
+										break;
+									}
 								}
+								sendMsg( rplMsg );
+	//							mmPane.okayButton.setEnabled( false );
 							}
-							sendMsg( rplMsg );
-//							mmPane.okayButton.setEnabled( false );
-						}
-					} );
-				
+						} );
+				}
+			
 				stPane.add( new JLabel(msg.player.getName() + " will make a Move" ) );
 				
 				this.revalidate();
