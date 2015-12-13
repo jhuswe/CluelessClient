@@ -262,6 +262,9 @@ public class MainApplication
 					{
 						@Override
 						public void actionPerformed(ActionEvent e) {
+							
+							System.out.println( "[ Disprove Panel ] DISPROVE button is clicked" );
+							
 							Message rplMsg = new Message();
 							rplMsg.action = Action.DISPROVE;								
 							rplMsg.player = new Player( new Character( playerId) );
