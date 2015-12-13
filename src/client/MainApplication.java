@@ -165,7 +165,7 @@ public class MainApplication
 				gbPane.updateGameBoard( msg.playerLocations );
 				stPane.add( new JLabel( "------------------------------") );
 				stPane.add( new JLabel(msg.player.getName() + " will make a Suggestion" ) );
-				
+		
 				if(  msg.player.getId() == this.playerId )
 				{
 					final SuggestionAccusationPanel saPanel = udPane.suggestionAccusationPanel;
@@ -284,6 +284,9 @@ public class MainApplication
 							sendMsg( rplMsg );
 						}
 					} );
+					
+				this.revalidate();
+				this.repaint();
 			}
 			
 			if( msg.action == Action.RECEIVE_DISPROVE_CARD )
