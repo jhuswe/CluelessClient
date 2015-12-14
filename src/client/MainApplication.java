@@ -216,19 +216,21 @@ public class MainApplication
 											break;
 										}
 									}
+								}
 									
-									for( int i = 0; i < saPanel.suspectBox.size() ; i++ )
+								for( int i = 0; i < saPanel.suspectBox.size() ; i++ )
+								{
+									if( saPanel.suspectBox.get( i ).isSelected() )
 									{
-										if( saPanel.suspectBox.get( i ).isSelected() )
-										{
-											rplMsg.SDAInfo.add( saPanel.SUSPECTS[i].value() );
-											break;
-										}
+										rplMsg.SDAInfo.add( saPanel.SUSPECTS[i].value() );
+										break;
 									}
+								}
 									
-									sendMsg( rplMsg );
-								}	
-							} );
+								sendMsg( rplMsg );
+								
+							}
+						});
 							
 						saPanel.accusationButton.addActionListener(
 							new ActionListener()
@@ -267,7 +269,7 @@ public class MainApplication
 							} );
 						suggestionAccusationButtonListenerAdded = true;
 					}
-				}
+			
 				
 				this.revalidate();
 				this.repaint();
