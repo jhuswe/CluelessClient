@@ -89,6 +89,9 @@ public class MainApplication
 	protected InOut IOport;
 	
 	protected boolean endGame;
+	protected boolean suggestionAccusationButtonListenerAdded = false;
+	protected boolean moveMakingButtonListenerAdded = false;
+	protected boolean disproveButtonListenerAdded = false;
 	
 	/** 
 	 * should be same as Character ID, i.e.
@@ -142,30 +145,34 @@ public class MainApplication
 				{
 					mmPanel.createComponents( msg.availableMoves );
 					
-					mmPanel.okayButton.addActionListener( 
-						new ActionListener()
-						{
-							@Override
-							public void actionPerformed(ActionEvent e) {
-								System.out.println("Move making panel Okay button click");
-								
-								Message rplMsg = new Message();
-								rplMsg.action = Action.MOVE;
-								rplMsg.player = new Player( new Character( playerId) );
-								
-								for( int i = 0; i < mmPanel.checkBox.size(); i++ )
-								{
-									if( mmPanel.checkBox.get( i ).isSelected() )
+					if( !moveMakingButtonListenerAdded )
+					{
+						mmPanel.okayButton.addActionListener( 
+							new ActionListener()
+							{
+								@Override
+								public void actionPerformed(ActionEvent e) {
+									System.out.println("Move making panel Okay button click");
+									
+									Message rplMsg = new Message();
+									rplMsg.action = Action.MOVE;
+									rplMsg.player = new Player( new Character( playerId) );
+									
+									for( int i = 0; i < mmPanel.checkBox.size(); i++ )
 									{
-										Location selectedLoc = msg.availableMoves.get( i );
-										rplMsg.player.location = selectedLoc;
-										break;
+										if( mmPanel.checkBox.get( i ).isSelected() )
+										{
+											Location selectedLoc = msg.availableMoves.get( i );
+											rplMsg.player.location = selectedLoc;
+											break;
+										}
 									}
+									sendMsg( rplMsg );
+		//							mmPane.okayButton.setEnabled( false );
 								}
-								sendMsg( rplMsg );
-	//							mmPane.okayButton.setEnabled( false );
-							}
-						} );
+							} );
+						moveMakingButtonListenerAdded = true;
+					}
 				}
 			
 				stPane.add( new JLabel(msg.player.getName() + " will make a Move" ) );
@@ -185,77 +192,81 @@ public class MainApplication
 					saPanel.suggestionButton.setEnabled( true );
 					saPanel.accusationButton.setEnabled( true );
 					
-					saPanel.suggestionButton.addActionListener(
-						new ActionListener()
-						{
-							@Override
-							public void actionPerformed(ActionEvent e) {
-								
-								System.out.println( "[ SuggestionAccusationPanel ] SUGGESTION button is clicked" );
-								
-								Message rplMsg = new Message();
-								rplMsg.action = Action.MAKE_SUGGESTION;
-								rplMsg.player = msg.player;
-								
-								rplMsg.SDAInfo.add( msg.player.location.getId() );
-								
-								for( int i = 0; i < saPanel.weaponBox.size() ; i++ )
-								{
-									if( saPanel.weaponBox.get( i ).isSelected() )
+					if( !suggestionAccusationButtonListenerAdded )
+					{	
+						saPanel.suggestionButton.addActionListener(
+							new ActionListener()
+							{
+								@Override
+								public void actionPerformed(ActionEvent e) {
+									
+									System.out.println( "[ SuggestionAccusationPanel ] SUGGESTION button is clicked" );
+									
+									Message rplMsg = new Message();
+									rplMsg.action = Action.MAKE_SUGGESTION;
+									rplMsg.player = msg.player;
+									
+									rplMsg.SDAInfo.add( msg.player.location.getId() );
+									
+									for( int i = 0; i < saPanel.weaponBox.size() ; i++ )
 									{
-										rplMsg.SDAInfo.add( saPanel.WEAPONS[i].value() );
-										break;
+										if( saPanel.weaponBox.get( i ).isSelected() )
+										{
+											rplMsg.SDAInfo.add( saPanel.WEAPONS[i].value() );
+											break;
+										}
 									}
-								}
-								
-								for( int i = 0; i < saPanel.suspectBox.size() ; i++ )
-								{
-									if( saPanel.suspectBox.get( i ).isSelected() )
+									
+									for( int i = 0; i < saPanel.suspectBox.size() ; i++ )
 									{
-										rplMsg.SDAInfo.add( saPanel.SUSPECTS[i].value() );
-										break;
+										if( saPanel.suspectBox.get( i ).isSelected() )
+										{
+											rplMsg.SDAInfo.add( saPanel.SUSPECTS[i].value() );
+											break;
+										}
 									}
-								}
-								
-								sendMsg( rplMsg );
-							}	
-						} );
-						
-					saPanel.accusationButton.addActionListener(
-						new ActionListener()
-						{
-							@Override
-							public void actionPerformed(ActionEvent e) {
-								
-								System.out.println( "[ SuggestionAccusationPanel ] ACCUSATION button is clicked" );
-								
-								Message rplMsg = new Message();
-								rplMsg.action = Action.ACCUSATION;
-								rplMsg.player = msg.player;
-								
-								rplMsg.SDAInfo.add( msg.player.location.getId() );
-								
-								for( int i = 0; i < saPanel.weaponBox.size() ; i++ )
-								{
-									if( saPanel.weaponBox.get( i ).isSelected() )
+									
+									sendMsg( rplMsg );
+								}	
+							} );
+							
+						saPanel.accusationButton.addActionListener(
+							new ActionListener()
+							{
+								@Override
+								public void actionPerformed(ActionEvent e) {
+									
+									System.out.println( "[ SuggestionAccusationPanel ] ACCUSATION button is clicked" );
+									
+									Message rplMsg = new Message();
+									rplMsg.action = Action.ACCUSATION;
+									rplMsg.player = msg.player;
+									
+									rplMsg.SDAInfo.add( msg.player.location.getId() );
+									
+									for( int i = 0; i < saPanel.weaponBox.size() ; i++ )
 									{
-										rplMsg.SDAInfo.add( saPanel.WEAPONS[i].value() );
-										break;
+										if( saPanel.weaponBox.get( i ).isSelected() )
+										{
+											rplMsg.SDAInfo.add( saPanel.WEAPONS[i].value() );
+											break;
+										}
 									}
-								}
-								
-								for( int i = 0; i < saPanel.suspectBox.size() ; i++ )
-								{
-									if( saPanel.suspectBox.get( i ).isSelected() )
+									
+									for( int i = 0; i < saPanel.suspectBox.size() ; i++ )
 									{
-										rplMsg.SDAInfo.add( saPanel.SUSPECTS[i].value() );
-										break;
+										if( saPanel.suspectBox.get( i ).isSelected() )
+										{
+											rplMsg.SDAInfo.add( saPanel.SUSPECTS[i].value() );
+											break;
+										}
 									}
-								}
-								
-								sendMsg( rplMsg );
-							}	
-						} );
+									
+									sendMsg( rplMsg );
+								}	
+							} );
+						suggestionAccusationButtonListenerAdded = true;
+					}
 				}
 				
 				this.revalidate();
@@ -272,31 +283,36 @@ public class MainApplication
 			if( msg.action == Action.DISPROVE && msg.player.getId() == this.playerId )
 			{
 				disprovePane.disproveButton.setEnabled( true );
-				disprovePane.disproveButton.addActionListener( 
-					new ActionListener()
-					{
-						@Override
-						public void actionPerformed(ActionEvent e) {
-							
-							System.out.println( "[ Disprove Panel ] DISPROVE button is clicked" );
-							
-							Message rplMsg = new Message();
-							rplMsg.action = Action.DISPROVE;								
-							rplMsg.player = new Player( new Character( playerId) );
-							
-							for( int i = 0; i < disprovePane.checkBox.size(); i++ )
-							{
-								if( disprovePane.checkBox.get( i ).isSelected() )
-								{
-									rplMsg.SDAInfo.add( 
-										disprovePane.playerCards.get( i ).value() );
-									break;
-								}
-							}
+				
+				if( !disproveButtonListenerAdded )
+				{
+					disprovePane.disproveButton.addActionListener( 
+						new ActionListener()
+						{
+							@Override
+							public void actionPerformed(ActionEvent e) {
 								
-							sendMsg( rplMsg );
-						}
-					} );
+								System.out.println( "[ Disprove Panel ] DISPROVE button is clicked" );
+								
+								Message rplMsg = new Message();
+								rplMsg.action = Action.DISPROVE;								
+								rplMsg.player = new Player( new Character( playerId) );
+								
+								for( int i = 0; i < disprovePane.checkBox.size(); i++ )
+								{
+									if( disprovePane.checkBox.get( i ).isSelected() )
+									{
+										rplMsg.SDAInfo.add( 
+											disprovePane.playerCards.get( i ).value() );
+										break;
+									}
+								}
+									
+								sendMsg( rplMsg );
+							}
+						} );
+					disproveButtonListenerAdded = true;
+				}
 					
 				this.revalidate();
 				this.repaint();
