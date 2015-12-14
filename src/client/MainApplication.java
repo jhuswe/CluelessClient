@@ -408,6 +408,10 @@ public class MainApplication
 				this.repaint();
 			}
 			
+			if (msg.action == Action.NO_DISPROVE_MADE) {
+				stPane.add( new JLabel( msg.player.getName() + " did not disprove the suggestion" ) );
+			}
+			
 		}
 	}
 	
