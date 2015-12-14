@@ -206,6 +206,7 @@ public class MainApplication
 									rplMsg.action = Action.MAKE_SUGGESTION;
 									rplMsg.player = msg.player;
 									
+									rplMsg.SDAInfo = new ArrayList<Integer>();
 									rplMsg.SDAInfo.add( msg.player.location.getId() );
 									
 									for( int i = 0; i < saPanel.weaponBox.size() ; i++ )
