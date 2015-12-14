@@ -1,7 +1,9 @@
 package client;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -141,6 +143,7 @@ public class MainApplication
 				disprovePane.playerCards = msg.player.cards;
 				disprovePane.createComponents();
 				
+				this.setName( Card.getCard( playerId ).name() );
 				this.revalidate();
 				this.repaint();
 			}
@@ -180,8 +183,8 @@ public class MainApplication
 								}
 							} );
 						moveMakingButtonListenerAdded = true;
-					//}
-				}
+					}
+//				}
 			
 				stPane.add( new JLabel(msg.player.getName() + " will make a Move" ) );
 				
@@ -290,51 +293,59 @@ public class MainApplication
 				this.repaint();
 			}
 			
-			if( msg.action == Action.DISPROVE && msg.player.getId() == this.playerId )
+			if( msg.action == Action.DISPROVE )
 			{
-				disprovePane.disproveButton.setEnabled( true );
+				stPane.add( new JLabel( msg.player.getName() + " will makes Disprove"));
 				
-				if( !disproveButtonListenerAdded )
+				if( msg.player.getId() == this.playerId )
 				{
-					disprovePane.disproveButton.addActionListener( 
-						new ActionListener()
-						{
-							@Override
-							public void actionPerformed(ActionEvent e) {
-								
-								System.out.println( "[ Disprove Panel ] DISPROVE button is clicked" );
-								
-								Message rplMsg = new Message();
-								rplMsg.action = Action.DISPROVE;								
-								rplMsg.player = new Player( new Character( playerId) );
-								rplMsg.SDAInfo = new ArrayList<Integer>();
-								
-								for( int i = 0; i < disprovePane.checkBox.size(); i++ )
-								{
-									if( disprovePane.checkBox.get( i ).isSelected() )
-									{
-										rplMsg.SDAInfo.add( 
-											disprovePane.playerCards.get( i ).value() );
-										break;
-									}
-								}
-									
-								sendMsg( rplMsg );
-							}
-						} );
-					disproveButtonListenerAdded = true;
-				}
+					disprovePane.disproveButton.setEnabled( true );
 					
+					if( !disproveButtonListenerAdded )
+					{
+						disprovePane.disproveButton.addActionListener( 
+							new ActionListener()
+							{
+								@Override
+								public void actionPerformed(ActionEvent e) {
+									
+									System.out.println( "[ Disprove Panel ] DISPROVE button is clicked" );
+									
+									Message rplMsg = new Message();
+									rplMsg.action = Action.DISPROVE;								
+									rplMsg.player = new Player( new Character( playerId) );
+									rplMsg.SDAInfo = new ArrayList<Integer>();
+									
+									for( int i = 0; i < disprovePane.checkBox.size(); i++ )
+									{
+										if( disprovePane.checkBox.get( i ).isSelected() )
+										{
+											rplMsg.SDAInfo.add( 
+												disprovePane.playerCards.get( i ).value() );
+											break;
+										}
+									}
+										
+									sendMsg( rplMsg );
+								}
+							} );
+						disproveButtonListenerAdded = true;
+					}
+				}
+				
 				this.revalidate();
 				this.repaint();
 			}
 			
 			if( msg.action == Action.RECEIVE_DISPROVE_CARD )
 			{
-				stPane.add( new JLabel( "You " + msg.action.getName() + ": " 
-						+ Card.getCard( msg.SDAInfo.get( 0 ) ) ) );
-				this.revalidate();
-				this.repaint();	
+				if( msg.player.getId() == this.playerId )
+				{
+					stPane.add( new JLabel( msg.action.getName() + "'s Disprove: " 
+							+ Card.getCard( msg.SDAInfo.get( 0 ) ) ) );
+					this.revalidate();
+					this.repaint();
+				}
 			}
 			
 			if( msg.action == Action.SHOW_SUGGESTION )
@@ -421,6 +432,8 @@ public class MainApplication
 		
 		stPane = new StatusPanel();
 		stPane.setBorder( BorderFactory.createLineBorder( Color.BLACK ) );
+		JScrollPane scrollStatusPane = new JScrollPane( stPane);
+		scrollStatusPane.setPreferredSize( new Dimension( 300, 150));
 		
 		disprovePane = new DisprovePanel();
 		disprovePane.setBorder( BorderFactory.createLineBorder( Color.BLACK ) );
@@ -429,7 +442,7 @@ public class MainApplication
 		JPanel rightPane = new JPanel();
 		rightPane.setLayout( new BoxLayout( rightPane, BoxLayout.Y_AXIS ) );
 		
-		rightPane.add( stPane );
+		rightPane.add( scrollStatusPane );
 		rightPane.add( disprovePane );
 		
 		topPane.add( gbPane, BorderLayout.LINE_START );
