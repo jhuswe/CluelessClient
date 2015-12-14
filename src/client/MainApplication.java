@@ -169,7 +169,6 @@ public class MainApplication
 									}
 									sendMsg( rplMsg );
 									
-									System.out.println("message sent");
 		//							mmPane.okayButton.setEnabled( false );
 								}
 							} );
@@ -300,6 +299,7 @@ public class MainApplication
 								Message rplMsg = new Message();
 								rplMsg.action = Action.DISPROVE;								
 								rplMsg.player = new Player( new Character( playerId) );
+								rplMsg.SDAInfo = new ArrayList<Integer>();
 								
 								for( int i = 0; i < disprovePane.checkBox.size(); i++ )
 								{
