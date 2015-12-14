@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -13,6 +14,8 @@ import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -186,7 +189,7 @@ public class MainApplication
 					}
 //				}
 			
-				stPane.add( new JLabel(msg.player.getName() + " will make a Move" ) );
+				stPane.add( new JLabel(msg.player.getName() + "'s turn to move" ) );
 				
 				this.revalidate();
 				this.repaint();
@@ -196,7 +199,7 @@ public class MainApplication
 			{
 				gbPane.updateGameBoard( msg.playerLocations );
 				stPane.add( new JLabel( "------------------------------") );
-				stPane.add( new JLabel(msg.player.getName() + " will make a Suggestion" ) );
+				stPane.add( new JLabel(msg.player.getName() + "'s turn to make a suggestion" ) );
 		
 				if(  msg.player.getId() == this.playerId )
 				{
@@ -295,7 +298,10 @@ public class MainApplication
 			
 			if( msg.action == Action.DISPROVE )
 			{
-				stPane.add( new JLabel( msg.player.getName() + " will makes Disprove"));
+				String cardNames = this.getSuggestionString(msg.SDAInfo);
+				
+				stPane.add( new JLabel( msg.player.getName() + "'s turn to disprove"));
+				stPane.add( new JLabel( "Suggestion: " + cardNames));
 				
 				if( msg.player.getId() == this.playerId )
 				{
@@ -313,7 +319,7 @@ public class MainApplication
 									
 									Message rplMsg = new Message();
 									rplMsg.action = Action.DISPROVE;								
-									rplMsg.player = new Player( new Character( playerId) );
+									rplMsg.player = new Player( new Character( msg.player.getId() ) );
 									rplMsg.SDAInfo = new ArrayList<Integer>();
 									
 									for( int i = 0; i < disprovePane.checkBox.size(); i++ )
@@ -341,8 +347,13 @@ public class MainApplication
 			{
 				if( msg.player.getId() == this.playerId )
 				{
-					stPane.add( new JLabel( msg.action.getName() + "'s Disprove: " 
-							+ Card.getCard( msg.SDAInfo.get( 0 ) ) ) );
+					stPane.add( new JLabel( msg.action.getName() + "'s disprove: " 
+							+ Card.getCard( msg.SDAInfo.get( 0 ) ).getName() ) );
+					this.revalidate();
+					this.repaint();
+				}
+				else {
+					stPane.add( new JLabel( "A disproval card was shown" ));
 					this.revalidate();
 					this.repaint();
 				}
@@ -350,7 +361,7 @@ public class MainApplication
 			
 			if( msg.action == Action.SHOW_SUGGESTION )
 			{
-				stPane.add( new JLabel( msg.player.getName() + " makes a Suggestion:" ) );
+				stPane.add( new JLabel( msg.player.getName() + " makes a suggestion:" ) );
 				String str = "[";
 				for( Integer i : msg.SDAInfo) 
 				{
@@ -368,7 +379,7 @@ public class MainApplication
 				saPanel.accusationButton.setEnabled( false );
 				saPanel.suggestionButton.setEnabled( false );
 				
-				stPane.add( new JLabel( msg.player.getName() + "made a WRONG Accusation" ) );
+				stPane.add( new JLabel( msg.player.getName() + "made a wrong accusation" ) );
 				
 				String str = "[";
 				for( Integer i : msg.SDAInfo) 
@@ -378,7 +389,7 @@ public class MainApplication
 				str += "]";
 				
 				stPane.add( new JLabel( str ) );
-				stPane.add( new JLabel( msg.player.getName() + "lost the turn" ) );
+				stPane.add( new JLabel( msg.player.getName() + " loses" ) );
 				
 				this.revalidate();
 				this.repaint();
@@ -393,7 +404,7 @@ public class MainApplication
 				
 				disprovePane.disproveButton.setEnabled( false );
 				
-				stPane.add( new JLabel( msg.player.getName() + "made a Correct Accusation" ) );
+				stPane.add( new JLabel( msg.player.getName() + "made a correct accusation" ) );
 				
 				String str = "[";
 				for( Integer i : msg.SDAInfo) 
@@ -411,6 +422,11 @@ public class MainApplication
 			if (msg.action == Action.NO_DISPROVE_MADE) {
 				stPane.add( new JLabel( msg.player.getName() + " did not disprove the suggestion" ) );
 			}
+			
+			//always scroll status panel to the bottom
+			int height = (int)stPane.getPreferredSize().getHeight();
+            Rectangle rect = new Rectangle(0,height,10,10);
+            stPane.scrollRectToVisible(rect);
 			
 		}
 	}
@@ -580,4 +596,14 @@ public class MainApplication
 		});
 	}
 	
+	//returns a comma seperated string of card names
+	private String getSuggestionString(List<Integer> guess) {
+		List<String> cardNames = new ArrayList<String>();;
+		
+		for (Integer cardId : guess) {
+			cardNames.add( Card.getCard(cardId).getName() );
+		}
+		
+		return String.join(", ", cardNames);
+	}
 }
