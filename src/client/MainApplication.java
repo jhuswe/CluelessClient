@@ -170,9 +170,6 @@ public class MainApplication
 									sendMsg( rplMsg );
 		//							mmPane.okayButton.setEnabled( false );
 								}
-								
-								//synchronize player data with choice that was just made
-								
 							} );
 						moveMakingButtonListenerAdded = true;
 					}
@@ -195,24 +192,23 @@ public class MainApplication
 					saPanel.suggestionButton.setEnabled( true );
 					saPanel.accusationButton.setEnabled( true );
 					
-					saPanel.suggestionButton.addActionListener(
-						new ActionListener()
-						{
-							@Override
-							public void actionPerformed(ActionEvent e) {
-								
-								System.out.println( "[ SuggestionAccusationPanel ] SUGGESTION button is clicked" );
-								
-								Message rplMsg = new Message();
-								rplMsg.action = Action.MAKE_SUGGESTION;
-								rplMsg.player = msg.player;
-								
-								rplMsg.SDAInfo = new ArrayList<Integer>();
-								rplMsg.SDAInfo.add( msg.player.location.getId() );
-								
-								for( int i = 0; i < saPanel.weaponBox.size() ; i++ )
-								{
-									if( saPanel.weaponBox.get( i ).isSelected() )
+					if( !suggestionAccusationButtonListenerAdded )
+					{	
+						saPanel.suggestionButton.addActionListener(
+							new ActionListener()
+							{
+								@Override
+								public void actionPerformed(ActionEvent e) {
+									
+									System.out.println( "[ SuggestionAccusationPanel ] SUGGESTION button is clicked" );
+									
+									Message rplMsg = new Message();
+									rplMsg.action = Action.MAKE_SUGGESTION;
+									rplMsg.player = msg.player;
+									
+									rplMsg.SDAInfo.add( msg.player.location.getId() );
+									
+									for( int i = 0; i < saPanel.weaponBox.size() ; i++ )
 									{
 										if( saPanel.weaponBox.get( i ).isSelected() )
 										{
