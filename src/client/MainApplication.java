@@ -168,6 +168,8 @@ public class MainApplication
 										}
 									}
 									sendMsg( rplMsg );
+									
+									System.out.println("message sent");
 		//							mmPane.okayButton.setEnabled( false );
 								}
 							} );
@@ -470,11 +472,13 @@ public class MainApplication
 						ipAddress = "127.0.0.1";
 					
 					socket = new Socket();
-					socket.connect( new InetSocketAddress( ipAddress, 8889 ), TIME_OUT );
+					socket.connect( new InetSocketAddress( ipAddress, 8889 ), 0 );
+					socket.setKeepAlive(true);
+					socket.setSoTimeout(0);
 					
 					PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
 		            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-		            IOport = new InOut(in, out);
+		            IOport = new InOut(in, out, socket);
 					
 		            logMessage("[ MainApplication:makeConnection() ] Connection Established");
 		            
