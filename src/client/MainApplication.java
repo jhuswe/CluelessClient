@@ -104,7 +104,6 @@ public class MainApplication
 	 */
 	protected int playerId; 
 	
-	
 	public MainApplication()
 	{
 		super( "Main Application" );
@@ -125,7 +124,9 @@ public class MainApplication
 			if( msg == null )
 				return;
 			
+			//always redraw player location and update current player
 			if (msg.playerLocations != null && msg.action != Action.INITIATE_CHARACTER) {
+				
 				gbPane.updateGameBoard( msg.playerLocations );
 				this.revalidate();
 				this.repaint();
@@ -220,8 +221,12 @@ public class MainApplication
 									rplMsg.action = Action.MAKE_SUGGESTION;
 									rplMsg.player = msg.player;
 									
+									int locationId = getPlayerLocation(msg.player.getId(), msg.playerLocations);
 									rplMsg.SDAInfo = new ArrayList<Integer>();
-									rplMsg.SDAInfo.add( msg.player.location.getId() );
+									//rplMsg.SDAInfo.add( msg.player.location.getId() );
+									rplMsg.SDAInfo.add( locationId );
+									
+									System.out.println( "location id: " + locationId );
 									
 									for( int i = 0; i < saPanel.weaponBox.size() ; i++ )
 									{
@@ -596,14 +601,34 @@ public class MainApplication
 		});
 	}
 	
-	//returns a comma seperated string of card names
+	//returns a comma separated string of card names
 	private String getSuggestionString(List<Integer> guess) {
-		List<String> cardNames = new ArrayList<String>();;
+		String cardNames = "";
 		
 		for (Integer cardId : guess) {
-			cardNames.add( Card.getCard(cardId).getName() );
+			cardNames += Card.getCard(cardId).getName() + ", ";
 		}
 		
-		return String.join(", ", cardNames);
+		if (cardNames.endsWith(", ")) {
+			cardNames = cardNames.substring(0, cardNames.length() - 2);
+		}
+
+		return cardNames;
 	}
+	
+	//find a character by and id and return a location containing them
+	private int getPlayerLocation(int characterId, List<Location> allLocations) {
+    	int locationId = 0;
+
+    	//does not stop searching when found, optimize this
+    	for (Location location : allLocations) {
+			for (Character searchCharacter : location.getOccupants()) {
+				if (characterId == searchCharacter.getId()) {
+					locationId = location.getId();
+				}
+			}
+		}
+    	
+    	return locationId;
+    }
 }
