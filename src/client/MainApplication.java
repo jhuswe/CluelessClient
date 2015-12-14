@@ -110,6 +110,10 @@ public class MainApplication
 		{
 			final Message msg = this.recvMsg();
 			
+//			final Message msg = new Message();
+//			msg.player = new Player( new Character( Card.MISS_SCARLET.value() ) );
+//			msg.action = Action.MAKE_SUGGESTION;
+			
 			if( msg == null )
 				return;
 			
@@ -178,6 +182,9 @@ public class MainApplication
 		
 				if(  msg.player.getId() == this.playerId )
 				{
+					saPanel.suggestionButton.setEnabled( true );
+					saPanel.accusationButton.setEnabled( true );
+					
 					saPanel.suggestionButton.addActionListener(
 						new ActionListener()
 						{
