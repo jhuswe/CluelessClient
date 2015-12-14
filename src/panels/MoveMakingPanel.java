@@ -39,6 +39,7 @@ public class MoveMakingPanel extends JPanel
 	{
 		if( init )
 			removeAll();
+		
 		this.setLayout( new BoxLayout( this, BoxLayout.Y_AXIS ) );
 		
 		title.setFont(new Font("Arial", Font.PLAIN, 20));

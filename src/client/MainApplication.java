@@ -1,6 +1,7 @@
 package client;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -56,7 +57,12 @@ public class MainApplication
 	/**
 	 * User-decision panel
 	 */
-	protected UserDecisionPanel udPane;
+//	protected UserDecisionPanel udPane;
+	
+	protected SuggestionAccusationPanel saPanel;
+	
+	protected MoveMakingPanel mmPanel;
+	
 	
 	/**
 	 * Disprove panel
@@ -103,14 +109,6 @@ public class MainApplication
 		while( !endGame )
 		{
 			final Message msg = this.recvMsg();
-//			final Message msg = new Message();
-//			msg.action = Action.MAKE_SUGGESTION;
-//			msg.player = new Player( new Character( Card.MISS_SCARLET.value() ) );
-//			ArrayList<Location> loc = new ArrayList<Location>();
-//			Room hall = new Room( Card.HALL.value() );
-//			hall.addOccupant( msg.player.character );
-//			loc.add( hall );
-//			msg.playerLocations = loc;
 			
 			if( msg == null )
 				return;
@@ -138,11 +136,9 @@ public class MainApplication
 			{
 				if(  msg.player.getId() == this.playerId )
 				{
-					udPane.switchToMoveMakingPanel();
-					final MoveMakingPanel mmPane = udPane.moveMakingPanel;
-					mmPane.createComponents( msg.availableMoves );
+					mmPanel.createComponents( msg.availableMoves );
 					
-					mmPane.okayButton.addActionListener( 
+					mmPanel.okayButton.addActionListener( 
 						new ActionListener()
 						{
 							@Override
@@ -153,9 +149,9 @@ public class MainApplication
 								rplMsg.action = Action.MOVE;
 								rplMsg.player = new Player( new Character( playerId) );
 								
-								for( int i = 0; i < mmPane.checkBox.size(); i++ )
+								for( int i = 0; i < mmPanel.checkBox.size(); i++ )
 								{
-									if( mmPane.checkBox.get( i ).isSelected() )
+									if( mmPanel.checkBox.get( i ).isSelected() )
 									{
 										Location selectedLoc = msg.availableMoves.get( i );
 										rplMsg.player.location = selectedLoc;
@@ -182,10 +178,6 @@ public class MainApplication
 		
 				if(  msg.player.getId() == this.playerId )
 				{
-					final SuggestionAccusationPanel saPanel = udPane.suggestionAccusationPanel;
-					udPane.switchToSuggestionAccusationPanel();
-					udPane.setActive( true );
-				
 					saPanel.suggestionButton.addActionListener(
 						new ActionListener()
 						{
@@ -327,7 +319,10 @@ public class MainApplication
 			
 			if( msg.action == Action.LOSE )
 			{
-				udPane.setActive( false );
+				mmPanel.okayButton.setEnabled( false );
+				saPanel.accusationButton.setEnabled( false );
+				saPanel.suggestionButton.setEnabled( false );
+				
 				stPane.add( new JLabel( msg.player.getName() + "made a WRONG Accusation" ) );
 				
 				String str = "[";
@@ -347,7 +342,10 @@ public class MainApplication
 			if( msg.action == Action.WIN )
 			{
 				endGame = true;
-				udPane.setActive( true );
+				mmPanel.okayButton.setEnabled( false );
+				saPanel.accusationButton.setEnabled( false );
+				saPanel.suggestionButton.setEnabled( false );
+				
 				disprovePane.disproveButton.setEnabled( false );
 				
 				stPane.add( new JLabel( msg.player.getName() + "made a Correct Accusation" ) );
@@ -375,8 +373,12 @@ public class MainApplication
 	 */
 	protected void openGameGUI()
 	{	
-		udPane = new UserDecisionPanel();
-		udPane.setBorder( BorderFactory.createLineBorder( Color.BLACK ) );
+//		udPane = new UserDecisionPanel();
+//		udPane.setBorder( BorderFactory.createLineBorder( Color.BLACK ) );
+		
+		mmPanel = new MoveMakingPanel();
+		
+		saPanel = new SuggestionAccusationPanel();
 		
 		dnPane = new DetectiveNotePanel();
 		dnPane.setBorder( BorderFactory.createLineBorder( Color.BLACK ) );
@@ -399,9 +401,14 @@ public class MainApplication
 		topPane.add( gbPane, BorderLayout.LINE_START );
 		topPane.add( rightPane, BorderLayout.LINE_END );
 		
+		JPanel userDecisionPanel = new JPanel( new FlowLayout( FlowLayout.LEFT ) );
+		userDecisionPanel.setBorder( BorderFactory.createLineBorder( Color.BLACK ) );
+		userDecisionPanel.add( mmPanel );
+		userDecisionPanel.add( saPanel );
+		
 		mainPane.add( topPane, BorderLayout.PAGE_START );
 		mainPane.add( dnPane, BorderLayout.LINE_START );
-		mainPane.add( udPane, BorderLayout.LINE_END );
+		mainPane.add( userDecisionPanel, BorderLayout.LINE_END );
 		
 		JScrollPane scroll = new JScrollPane( mainPane );
 		add( scroll );

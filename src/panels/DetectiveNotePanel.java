@@ -93,17 +93,9 @@ public class DetectiveNotePanel
 			JLabel label = new JLabel( labelName );
 			
 			JCheckBox box1 = new JCheckBox();
-			JCheckBox box2 = new JCheckBox();
-			JCheckBox box3 = new JCheckBox();
-			JCheckBox box4 = new JCheckBox();
-			JCheckBox box5 = new JCheckBox();
 			
 			add( label );
 			add( box1 );
-			add( box2 );
-			add( box3 );
-			add( box4 );
-			add( box5 );
 		}	
 	}
 	
