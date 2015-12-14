@@ -120,6 +120,12 @@ public class MainApplication
 			if( msg == null )
 				return;
 			
+			if (msg.playerLocations != null && msg.action != Action.INITIATE_CHARACTER) {
+				gbPane.updateGameBoard( msg.playerLocations );
+				this.revalidate();
+				this.repaint();
+			}
+			
 			this.logMessage( "[ Message ] " + msg.action + " for Player " + msg.player.getName() );
 			
 			if( msg.action == Action.INITIATE_CHARACTER )
@@ -145,8 +151,9 @@ public class MainApplication
 				{
 					mmPanel.createComponents( msg.availableMoves );
 					
-					if( !moveMakingButtonListenerAdded )
-					{
+					//Ky I commented this out because it seems to break the move system on the 2nd round
+//					if( !moveMakingButtonListenerAdded )
+//					{
 						mmPanel.okayButton.addActionListener( 
 							new ActionListener()
 							{
@@ -173,7 +180,7 @@ public class MainApplication
 								}
 							} );
 						moveMakingButtonListenerAdded = true;
-					}
+					//}
 				}
 			
 				stPane.add( new JLabel(msg.player.getName() + " will make a Move" ) );
@@ -244,6 +251,7 @@ public class MainApplication
 									rplMsg.action = Action.ACCUSATION;
 									rplMsg.player = msg.player;
 									
+									rplMsg.SDAInfo = new ArrayList<Integer>();
 									rplMsg.SDAInfo.add( msg.player.location.getId() );
 									
 									for( int i = 0; i < saPanel.weaponBox.size() ; i++ )
