@@ -21,7 +21,7 @@ public class DetectiveNotePanel
 	
 	private static final String[] ROOMS = { 
 		"Hall", "Lounge", "Dinning Room", "Ball Room",
-		"Conservatory", "Billiard Room", "Library", "Study" };
+		"Conservatory", "Billiard Room", "Library", "Study", "Kitchen" };
 	
 	private static final String[] WEAPONS = { 
 		"Knife", "Candle Stick", "Rope",
