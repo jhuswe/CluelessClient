@@ -385,21 +385,27 @@ public class MainApplication
 			
 			if( msg.action == Action.LOSE )
 			{
-				mmPanel.okayButton.setEnabled( false );
-				saPanel.accusationButton.setEnabled( false );
-				saPanel.suggestionButton.setEnabled( false );
-				
-				stPane.add( new JLabel( msg.player.getName() + "made a wrong accusation" ) );
-				
-				String str = "[";
-				for( Integer i : msg.SDAInfo) 
+				if( msg.player.getId() == this.playerId )
 				{
-					str = str + Card.getCard( i ).getName() + ",";
+					mmPanel.okayButton.setEnabled( false );
+					saPanel.accusationButton.setEnabled( false );
+					saPanel.suggestionButton.setEnabled( false );
+					
+					stPane.add( new JLabel( msg.player.getName() + " made a wrong accusation" ) );
+					
+					String str = "[";
+					for( Integer i : msg.SDAInfo) 
+					{
+						str = str + Card.getCard( i ).getName() + ",";
+					}
+					str += "]";
+					
+					stPane.add( new JLabel( str ) );
+					stPane.add( new JLabel( msg.player.getName() + " loses" ) );
 				}
-				str += "]";
-				
-				stPane.add( new JLabel( str ) );
-				stPane.add( new JLabel( msg.player.getName() + " loses" ) );
+				else {
+					stPane.add( new JLabel( msg.player.getName() + " loses" ) );
+				}
 				
 				this.revalidate();
 				this.repaint();
@@ -414,7 +420,7 @@ public class MainApplication
 				
 				disprovePane.disproveButton.setEnabled( false );
 				
-				stPane.add( new JLabel( msg.player.getName() + "made a correct accusation" ) );
+				stPane.add( new JLabel( msg.player.getName() + " made a correct accusation" ) );
 				
 				String str = "[";
 				for( Integer i : msg.SDAInfo) 
@@ -431,6 +437,10 @@ public class MainApplication
 			
 			if (msg.action == Action.NO_DISPROVE_MADE) {
 				stPane.add( new JLabel( msg.player.getName() + " did not disprove the suggestion" ) );
+			}
+			
+			if (msg.action == Action.EVERYONE_LOSES) {
+				stPane.add( new JLabel( "All players are out of the game" ) );
 			}
 			
 			//always scroll status panel to the bottom
