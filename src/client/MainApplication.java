@@ -97,6 +97,7 @@ public class MainApplication
 	protected boolean suggestionAccusationButtonListenerAdded = false;
 	protected boolean moveMakingButtonListenerAdded = false;
 	protected boolean disproveButtonListenerAdded = false;
+	protected List<Location> test;
 	
 	/** 
 	 * should be same as Character ID, i.e.
@@ -109,6 +110,7 @@ public class MainApplication
 		super( "Main Application" );
 		mainPane = new JPanel( new BorderLayout() );
 		endGame = false;
+		test = new ArrayList<Location>();
 	}
 	
 	public void runGame()
@@ -128,6 +130,7 @@ public class MainApplication
 			if (msg.playerLocations != null && msg.action != Action.INITIATE_CHARACTER) {
 				
 				gbPane.updateGameBoard( msg.playerLocations );
+				this.test = msg.playerLocations;
 				this.revalidate();
 				this.repaint();
 			}
@@ -207,8 +210,8 @@ public class MainApplication
 					saPanel.suggestionButton.setEnabled( true );
 					saPanel.accusationButton.setEnabled( true );
 					
-					if( !suggestionAccusationButtonListenerAdded )
-					{	
+//					if( !suggestionAccusationButtonListenerAdded )
+//					{
 						saPanel.suggestionButton.addActionListener(
 							new ActionListener()
 							{
@@ -262,8 +265,10 @@ public class MainApplication
 									rplMsg.action = Action.ACCUSATION;
 									rplMsg.player = msg.player;
 									
+									int locationId = getPlayerLocation(msg.player.getId(), msg.playerLocations);
 									rplMsg.SDAInfo = new ArrayList<Integer>();
-									rplMsg.SDAInfo.add( msg.player.location.getId() );
+									//rplMsg.SDAInfo.add( msg.player.location.getId() );
+									rplMsg.SDAInfo.add( locationId );
 									
 									for( int i = 0; i < saPanel.weaponBox.size() ; i++ )
 									{
@@ -287,7 +292,7 @@ public class MainApplication
 								}	
 							} );
 						suggestionAccusationButtonListenerAdded = true;
-					}
+					//}
 				}
 				
 				this.revalidate();
