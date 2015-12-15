@@ -431,6 +431,8 @@ public class MainApplication
 			
 			if (msg.action == Action.NO_DISPROVE_MADE) {
 				stPane.add( new JLabel( msg.player.getName() + " did not disprove the suggestion" ) );
+				this.revalidate();
+				this.repaint();
 			}
 			
 			//always scroll status panel to the bottom
@@ -463,7 +465,7 @@ public class MainApplication
 		stPane = new StatusPanel();
 		stPane.setBorder( BorderFactory.createLineBorder( Color.BLACK ) );
 		JScrollPane scrollStatusPane = new JScrollPane( stPane);
-		scrollStatusPane.setPreferredSize( new Dimension( 300, 150));
+		scrollStatusPane.setPreferredSize( new Dimension( 400, 150));
 		
 		disprovePane = new DisprovePanel();
 		disprovePane.setBorder( BorderFactory.createLineBorder( Color.BLACK ) );
@@ -595,13 +597,6 @@ public class MainApplication
 			public void run() {
 				MainApplication app = new MainApplication();
 				app.makeConnection();
-				
-				// Message example for Controller to Client 
-				// for a particular Player to make suggestion
-				Message msg1 = new Message();
-				msg1.action = Action.MAKE_SUGGESTION;
-				msg1.player = new Player( new Character( Card.MR_GREEN.value() ) );
-				
 			}
 		});
 	}
@@ -617,7 +612,7 @@ public class MainApplication
 		if (cardNames.endsWith(", ")) {
 			cardNames = cardNames.substring(0, cardNames.length() - 2);
 		}
-
+//		System.out.print("[ Debug, getSuggestionString ] " + cardNames );
 		return cardNames;
 	}
 	
